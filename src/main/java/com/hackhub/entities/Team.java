@@ -27,7 +27,7 @@ public class Team {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "leader_id")
-    private Users leader;
+    private User leader;
     
     @Column(name = "created_at")
     private LocalDateTime createdAt;

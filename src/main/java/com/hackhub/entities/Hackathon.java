@@ -39,5 +39,5 @@ public class Hackathon {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
-    private Users createdBy;
+    private User createdBy;
 }
