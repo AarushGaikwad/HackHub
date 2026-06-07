@@ -1,19 +1,22 @@
-package com.hackhub.dto;
+package com.hackhub.responsedto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Data
+
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserResponseDTO {
-
+@Data
+@Builder
+public class UserResponseDto {
     private Integer id;
     private String name;
     private String email;
+    private String password; // TODO: remove before production
     private String role;
     private String designation;
     private String status;

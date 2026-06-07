@@ -24,7 +24,7 @@ public class Evaluation {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "judge_id")
-    private Users judge;
+    private User judge;
 
     @Column(name = "score")
     private Double score;
