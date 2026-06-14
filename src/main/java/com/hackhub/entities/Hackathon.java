@@ -2,13 +2,17 @@ package com.hackhub.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import com.hackhub.responsedto.HackathonResponseDto.HackathonResponseDtoBuilder;
+
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Data
 @Entity
 @Table(name = "hackathon")
@@ -40,4 +44,6 @@ public class Hackathon {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
     private User createdBy;
+
+
 }
