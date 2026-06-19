@@ -81,4 +81,48 @@ public class HackathonController {
                 .status(HttpStatus.OK)
                 .body(ResponseStatus.success("Hackathon deleted successfully"));
     }
+    
+    //Organizer API
+    
+    @GetMapping("/organizer/{organizerId}")
+    public ResponseEntity<ResponseStatus<List<HackathonResponseDto>>>
+    getHackathonsByOrganizer(
+            @PathVariable Integer organizerId){
+
+        return ResponseEntity.ok(
+                ResponseStatus.success(
+                        hackathonService
+                                .getHackathonsByOrganizer(organizerId)
+                )
+        );
+    }
+    
+    //Organization API
+    
+    @GetMapping("/organization/{organizationId}")
+    public ResponseEntity<ResponseStatus<List<HackathonResponseDto>>>
+    getHackathonsByOrganization(
+            @PathVariable Integer organizationId){
+
+        return ResponseEntity.ok(
+                ResponseStatus.success(
+                        hackathonService
+                                .getHackathonsByOrganization(organizationId)
+                )
+        );
+    }
+    
+    //Search API
+    
+    @GetMapping("/search")
+    public ResponseEntity<ResponseStatus<List<HackathonResponseDto>>>
+    searchHackathons(
+            @RequestParam String keyword){
+
+        return ResponseEntity.ok(
+                ResponseStatus.success(
+                        hackathonService.searchHackathons(keyword)
+                )
+        );
+    }
 }
