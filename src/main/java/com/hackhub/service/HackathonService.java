@@ -82,7 +82,53 @@ public class HackathonService {
 
         return mapToResponse(hackathon);
     }
+    
+    //Get Hackathons By Organizer /Phase-2
+    
+    public List<HackathonResponseDto> getHackathonsByOrganizer(Integer organizerId) {
 
+        User organizer = userRepository.findById(organizerId)
+                .orElseThrow(() -> new RuntimeException("Organizer not found"));
+
+        if (!"ORGANIZER".equalsIgnoreCase(organizer.getRole())) {
+            throw new RuntimeException("User is not an organizer");
+        }
+
+        return hackathonRepository.findByCreatedById(organizerId)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+    
+    //Get Hackathons by Organization /Phase-2
+    
+    public List<HackathonResponseDto> getHackathonsByOrganization(Integer organizationId) {
+
+        organizationRepository.findById(organizationId)
+                .orElseThrow(() ->
+                        new RuntimeException("Organization not found"));
+
+        return hackathonRepository.findByOrganizationId(organizationId)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+    
+    //Search Hackathons
+    
+    public List<HackathonResponseDto> searchHackathons(String keyword) {
+
+        if (keyword == null || keyword.trim().isEmpty()) {
+            throw new RuntimeException("Keyword cannot be blank");
+        }
+
+        return hackathonRepository
+                .findByTitleContainingIgnoreCase(keyword)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+    
     // Update Hackathon
     public HackathonResponseDto updateHackathon(Integer id,
                                                 HackathonRequestDto request) {
