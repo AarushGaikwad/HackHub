@@ -75,4 +75,10 @@ public class HackathonController {
     public ResponseEntity<ResponseStatus<List<HackathonResponseDto>>> searchHackathons(@RequestParam String keyword) {
         return ResponseEntity.ok(ResponseStatus.success(hackathonService.searchHackathons(keyword)));
     }
+
+    // Filter hackathon by status
+    @GetMapping("/filter")
+    public ResponseEntity<ResponseStatus<List<HackathonResponseDto>>> filterHackathonByStatus(@RequestParam String status) {
+        return ResponseEntity.ok(ResponseStatus.success(hackathonService.filterHackathonByStatus(status)));
+    }
 }
