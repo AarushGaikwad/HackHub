@@ -11,6 +11,7 @@ import com.hackhub.responsedto.HackathonResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.*;
@@ -83,8 +84,7 @@ public class HackathonService {
         return mapToResponse(hackathon);
     }
     
-    //Get Hackathons By Organizer /Phase-2
-    
+    //Get Hackathons By Organizer
     public List<HackathonResponseDto> getHackathonsByOrganizer(Integer organizerId) {
 
         User organizer = userRepository.findById(organizerId)
@@ -100,8 +100,7 @@ public class HackathonService {
                 .toList();
     }
     
-    //Get Hackathons by Organization /Phase-2
-    
+    //Get Hackathons by Organization
     public List<HackathonResponseDto> getHackathonsByOrganization(Integer organizationId) {
 
         organizationRepository.findById(organizationId)
@@ -115,7 +114,6 @@ public class HackathonService {
     }
     
     //Search Hackathons
-    
     public List<HackathonResponseDto> searchHackathons(String keyword) {
 
         if (keyword == null || keyword.trim().isEmpty()) {
@@ -175,4 +173,31 @@ public class HackathonService {
                 .organizerName(hackathon.getCreatedBy().getName())
                 .build();
     }
+
+    public List<HackathonResponseDto> filterHackathonByStatus(String status) {
+        LocalDateTime now = LocalDateTime.now();
+        List<Hackathon> hackathonList;
+
+        switch (status.toUpperCase()) {
+            case "ACTIVE" :
+                hackathonList = hackathonRepository.findActiveHackathons(now);
+                break;
+
+            case "UPCOMING" :
+                hackathonList = hackathonRepository.findByStartDateAfter(now);
+                break;
+
+            case "COMPLETED" :
+                hackathonList =hackathonRepository.findByEndDateBefore(now);
+                break;
+
+            default:
+                throw new RuntimeException("Invalid status.");
+        }
+
+        return hackathonList.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
 }
