@@ -23,10 +23,10 @@ public class Hackathon {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "rules")
+    @Column(name = "rules", columnDefinition = "TEXT")
     private String rules;
 
     @Column(name = "start_date")
@@ -34,6 +34,9 @@ public class Hackathon {
 
     @Column(name = "end_date")
     private LocalDateTime endDate;
+
+    @Column(name = "max_team_size")
+    private Integer maxTeamSize;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_id")
