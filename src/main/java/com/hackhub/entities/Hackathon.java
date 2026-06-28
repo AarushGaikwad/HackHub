@@ -46,5 +46,8 @@ public class Hackathon {
     @JoinColumn(name = "created_by")
     private User createdBy;
 
+    @Column(name = "registration_deadline")
+    private LocalDateTime registrationDeadline;
+
 
 }

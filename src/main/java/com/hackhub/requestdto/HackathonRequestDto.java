@@ -32,4 +32,10 @@ public class HackathonRequestDto {
 
     @NotNull(message = "Created By is required")
     private Integer createdBy;
+
+    @NotNull(message = "Max Team size is required")
+    private Integer maxTeamSize;
+
+    // optional - if the logic is not implemented then the default deadline will be 1 day before the hackathon starts
+    private LocalDateTime registrationDeadline;
 }
