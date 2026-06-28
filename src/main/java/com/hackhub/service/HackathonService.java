@@ -40,6 +40,10 @@ public class HackathonService {
             throw new RuntimeException("End date must be greater than start date");
         }
 
+        LocalDateTime registrationDeadline = request.getRegistrationDeadline() != null
+                ? request.getRegistrationDeadline()
+                : request.getStartDate().minusDays(1);
+
         Organization organization = organizationRepository.findById(request.getOrganizationId())
                 .orElseThrow(() -> new RuntimeException("Organization not found"));
 
@@ -58,6 +62,8 @@ public class HackathonService {
                 .endDate(request.getEndDate())
                 .organization(organization)
                 .createdBy(organizer)
+                .maxTeamSize(request.getMaxTeamSize())
+                .registrationDeadline(registrationDeadline)
                 .build();
 
         Hackathon savedHackathon = hackathonRepository.save(hackathon);
@@ -128,8 +134,7 @@ public class HackathonService {
     }
     
     // Update Hackathon
-    public HackathonResponseDto updateHackathon(Integer id,
-                                                HackathonRequestDto request) {
+    public HackathonResponseDto updateHackathon(Integer id, HackathonRequestDto request) {
 
         Hackathon hackathon = hackathonRepository.findById(id)
                 .orElseThrow(() ->
@@ -139,11 +144,16 @@ public class HackathonService {
             throw new RuntimeException("End date must be greater than start date");
         }
 
+        LocalDateTime registrationDeadline = request.getRegistrationDeadline() != null
+                ? request.getRegistrationDeadline()
+                : request.getStartDate().minusDays(1);
+
         hackathon.setTitle(request.getTitle());
         hackathon.setDescription(request.getDescription());
         hackathon.setRules(request.getRules());
         hackathon.setStartDate(request.getStartDate());
         hackathon.setEndDate(request.getEndDate());
+        hackathon.setRegistrationDeadline(registrationDeadline);
 
         Hackathon updatedHackathon = hackathonRepository.save(hackathon);
 
@@ -171,6 +181,8 @@ public class HackathonService {
                 .endDate(hackathon.getEndDate())
                 .organizationName(hackathon.getOrganization().getName())
                 .organizerName(hackathon.getCreatedBy().getName())
+                .maxTeamSize(hackathon.getMaxTeamSize())
+                .registrationDeadline(hackathon.getRegistrationDeadline())
                 .build();
     }
 
