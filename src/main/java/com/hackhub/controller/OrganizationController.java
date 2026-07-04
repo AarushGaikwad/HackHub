@@ -27,17 +27,13 @@ public class OrganizationController {
     @PostMapping("/create")
     public ResponseEntity<ResponseStatus<OrganizationResponseDto>> createOrganization(@RequestBody @Valid OrganizationRequestDto organizationRequestDto) {
         OrganizationResponseDto response = organizationService.createOrganization(organizationRequestDto);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(ResponseStatus.success(response));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseStatus.success(response));
     }
 
     // Get all organizations
     @GetMapping("/organizations")
     public ResponseEntity<ResponseStatus<List<OrganizationResponseDto>>> getAllOrganizations() {
         List<OrganizationResponseDto> responseList = organizationService.getAllOrganizations();
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(ResponseStatus.success(responseList));
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseStatus.success(responseList));
     }
 }
