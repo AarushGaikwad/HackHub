@@ -13,27 +13,28 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 @Entity
-@Table(name = "evaluation")
-public class Evaluation {
+@Table(name = "judge_assignment")
+public class JudgeAssignment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "submission_id")
-    private Submission submission;
+    @JoinColumn(name = "hackathon_id")
+    private  Hackathon hackathon;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "judge_id")
     private User judge;
 
-    @Column(name = "score")
-    private Double score;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assigned_by")
+    private User assignedBy;
 
-    @Column(name = "feedback", columnDefinition = "TEXT")
-    private String feedback;
+    @Column(name = "status")
+    private String status;
 
-    @Column(name = "evaluated_at")
-    private LocalDateTime evaluatedAt;
+    @Column(name = "assigned_at")
+    private LocalDateTime assignedAt;
 }
