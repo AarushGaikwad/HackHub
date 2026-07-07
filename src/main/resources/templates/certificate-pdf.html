@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>HackHub Certificate</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        @page{
+            size:A4 landscape;
+            margin:0;
+        }
+
+        body{
+            width:297mm;
+            height:210mm;
+            background:#FFFDF8;
+            font-family:"Cormorant Garamond",Georgia,serif;
+        }
+
+        .certificate{
+            width:277mm;
+            min-height:190mm;
+            margin:10mm auto;
+            padding:18mm;
+            border:4px solid #183153;
+            background:#FFFDF8;
+            position:relative;
+        }
+
+        .seal{
+            position:absolute;
+            top:30mm;
+            left:92mm;
+            width:80mm;
+            height:80mm;
+            opacity:.04;
+        }
+
+        .header{
+            text-align:center;
+            margin-bottom:8mm;
+        }
+
+        .logo-box{
+            display:inline-block;
+            width:12mm;
+            height:12mm;
+            line-height:11mm;
+            text-align:center;
+            border-radius:50%;
+            background:#183153;
+            color:#fff;
+            border:2px solid #183153;
+            font-weight:bold;
+            font-size:16pt;
+        }
+
+        .brand-name{
+            display:inline-block;
+            margin-left:4mm;
+            vertical-align:middle;
+            color:#183153;
+            font-family:"Playfair Display",serif;
+            font-size:14pt;
+            font-weight:700;
+            letter-spacing:3pt;
+        }
+
+        .title h1{
+            margin-top:6mm;
+            color:#183153;
+            font-size:32pt;
+            letter-spacing:5pt;
+            font-family:"Playfair Display",serif;
+        }
+
+        .title h2{
+            margin-top:2mm;
+            color:#183153;
+            font-size:10pt;
+            letter-spacing:5pt;
+            text-transform:uppercase;
+        }
+
+        .content{
+            text-align:center;
+        }
+
+        .presented,.awarded{
+            color:#666;
+            font-size:11pt;
+        }
+
+        .name{
+            margin:3mm 0;
+            color:#183153;
+            font-size:36pt;
+            font-family:"Great Vibes",cursive;
+        }
+
+        .name-line{
+            width:80mm;
+            height:.3mm;
+            background:#d7d1bf;
+            margin:0 auto 4mm;
+        }
+
+        .hackathon{
+            margin-top:3mm;
+            color:#183153;
+            font-size:18pt;
+            font-family:"Playfair Display",serif;
+            font-weight:600;
+        }
+
+        .message{
+            width:200mm;
+            margin:6mm auto 12mm;
+            color:#666;
+            line-height:1.6;
+            font-size:9.5pt;
+        }
+
+        .footer{
+            margin-top:18mm;
+        }
+
+        .footer-left{
+            float:left;
+            width:55mm;
+            text-align:center;
+        }
+
+        .footer-right{
+            float:right;
+            width:55mm;
+            text-align:center;
+        }
+
+        .signature{
+            font-family:"Great Vibes",cursive;
+            font-size:18pt;
+            color:#183153;
+            height:8mm;
+            margin-bottom:2mm;
+        }
+
+        .footer-left hr,.footer-right hr{
+            border:none;
+            border-top:.3mm solid #d7d1bf;
+            margin-bottom:2mm;
+        }
+
+        .footer-left h4,.footer-right h4{
+            color:#183153;
+            font-size:10pt;
+            font-family:"Playfair Display",serif;
+        }
+
+        .footer-left p,.footer-right p{
+            color:#777;
+            font-size:7pt;
+            letter-spacing:1.5pt;
+            text-transform:uppercase;
+            margin-top:1mm;
+        }
+
+        .clear{
+            clear:both;
+        }
+    </style>
+</head>
+<body>
+<div class="certificate">
+    <svg class="seal" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="100" cy="100" r="95" fill="none" stroke="#183153" stroke-width="2"/>
+        <circle cx="100" cy="100" r="70" fill="none" stroke="#183153" stroke-width="1"/>
+        <path d="M85 95 L96 108 L118 82" stroke="#183153" stroke-width="4" fill="none"/>
+    </svg>
+    <div class="header">
+        <span class="logo-box">H</span>
+        <span class="brand-name">HackHub</span>
+        <div class="title">
+            <h1>CERTIFICATE</h1>
+            <h2>OF ACHIEVEMENT</h2>
+        </div>
+    </div>
+    <div class="content">
+        <p class="presented">This certificate is proudly presented to</p>
+        <div class="name">{{participantName}}</div>
+        <div class="name-line"></div>
+        <p class="awarded">In recognition of outstanding performance during</p>
+        <div class="hackathon">{{hackathonName}}</div>
+        <p class="message">
+            This certificate recognizes your exceptional creativity, technical excellence,
+            teamwork and dedication demonstrated throughout the hackathon.
+            We congratulate you on your remarkable achievement and wish you continued success.
+        </p>
+    </div>
+    <div class="footer">
+        <div class="footer-left">
+            <div class="signature">{{organizerName}}</div>
+            <hr/>
+            <h4>{{organizerName}}</h4>
+            <p>Organizer</p>
+        </div>
+        <div class="footer-right">
+            <div style="height:8mm;"></div>
+            <hr/>
+            <h4>{{issuedDate}}</h4>
+            <p>Date Issued</p>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+</body>
+</html>
