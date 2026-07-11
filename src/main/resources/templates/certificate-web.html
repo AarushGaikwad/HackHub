@@ -27,6 +27,16 @@
             margin: 0 auto;
         }
 
+        .certificate-type {
+            margin-top: 18px;
+            color: #B8892E;
+            font-size: 22px;
+            font-weight: 700;
+            font-family: "Playfair Display", serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
         .inner-border {
             border: 2px solid #B8892E;
             padding: 50px 65px;
@@ -164,7 +174,7 @@
 
         .hackathon {
             margin-top: 10px;
-            color: #B8892E;
+            color: #183153;
             font-size: 28px;
             font-weight: 600;
             font-family: "Playfair Display", serif;
@@ -270,13 +280,17 @@
             <div class="name-line"></div>
             <p class="awarded">In recognition of outstanding performance during</p>
             <div class="hackathon">{{hackathonName}}</div>
+
+            <div class="certificate-type">
+                {{certificateType}}
+            </div>
+
             <p class="message">
-                This certificate recognizes your exceptional creativity,
-                technical excellence, teamwork, and dedication demonstrated
-                throughout the hackathon. Your innovative ideas and commitment
-                to solving real-world challenges have made a lasting impact.
-                We congratulate you on your remarkable achievement and wish
-                you continued success in your future endeavors.
+                This certificate is awarded in recognition of your
+                dedication, innovation, teamwork, and technical excellence
+                demonstrated throughout the Hackathon.
+                We sincerely appreciate your participation and wish you
+                continued success in your academic and professional journey.
             </p>
         </div>
 

@@ -162,7 +162,8 @@ public class CertificateService {
                     certificate.getUser().getName(),
                     certificate.getHackathon().getTitle(),
                     certificate.getHackathon().getCreatedBy().getName(),
-                    certificate.getIssuedAt().toLocalDate().toString());
+                    certificate.getIssuedAt().toLocalDate().toString(),
+                    certificate.getType());
         } catch (Exception e) {
             throw new RuntimeException(
                     "Failed to generate certificate PDF: " + e.getMessage());
@@ -187,7 +188,8 @@ public class CertificateService {
                     user.getName(),
                     hackathon.getTitle(),
                     organizerName,
-                    issuedDate);
+                    issuedDate,
+                    certificate.getType());
 
             // Send email with PDF attachment
             emailService.sendCertificateEmail(
@@ -201,6 +203,14 @@ public class CertificateService {
         }
 
         return mapToResponse(saved);
+    }
+
+    // Get all certificates
+    public List<CertificateResponseDto> getAllCertificates() {
+        return certificateRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 
     private CertificateResponseDto mapToResponse(Certificate certificate) {
