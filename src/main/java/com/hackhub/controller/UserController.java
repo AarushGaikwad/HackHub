@@ -22,7 +22,7 @@ import java.util.List;
 @RequestMapping("/user/register")
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public UserController(UserService userService) {
@@ -54,6 +54,6 @@ public class UserController {
     @GetMapping("/users")
     public ResponseEntity<ResponseStatus<List<UserResponseDto>>> getAllUsers() {
         List<UserResponseDto> response = userService.getAllUsers();
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseStatus.success(response)); //TODO: add this method in the admin controller
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseStatus.success(response));
     }
 }

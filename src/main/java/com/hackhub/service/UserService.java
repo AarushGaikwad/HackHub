@@ -156,6 +156,91 @@ public class UserService {
                 .build();
     }
 
+    // Get user by id
+    public UserResponseDto getUserById(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException(
+                        "User not found with id: " + userId));
+        return UserResponseDto.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .designation(user.getDesignation())
+                .status(user.getStatus())
+                .createdAt(user.getCreatedAt())
+                .build();
+    }
+
+    // Approve organizer
+    public UserResponseDto approveOrganizer(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException(
+                        "User not found with id: " + userId));
+
+        if (!"ORGANIZER".equalsIgnoreCase(user.getRole()))
+            throw new RuntimeException("Only ORGANIZER status can be approved");
+
+        if ("APPROVED".equalsIgnoreCase(user.getStatus()))
+            throw new RuntimeException("Organizer is already approved");
+
+        user.setStatus("APPROVED");
+        User saved = userRepository.save(user);
+
+        return UserResponseDto.builder()
+                .id(saved.getId())
+                .name(saved.getName())
+                .email(saved.getEmail())
+                .role(saved.getRole())
+                .designation(saved.getDesignation())
+                .status(saved.getStatus())
+                .createdAt(saved.getCreatedAt())
+                .build();
+    }
+
+    // Reject organizer
+    public UserResponseDto rejectOrganizer(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException(
+                        "User not found with id: " + userId));
+
+        if (!"ORGANIZER".equalsIgnoreCase(user.getRole()))
+            throw new RuntimeException("Only ORGANIZER status can be rejected");
+
+        if ("REJECTED".equalsIgnoreCase(user.getStatus()))
+            throw new RuntimeException("Organizer is already rejected");
+
+        user.setStatus("REJECTED");
+        User saved = userRepository.save(user);
+
+        return UserResponseDto.builder()
+                .id(saved.getId())
+                .name(saved.getName())
+                .email(saved.getEmail())
+                .role(saved.getRole())
+                .designation(saved.getDesignation())
+                .status(saved.getStatus())
+                .createdAt(saved.getCreatedAt())
+                .build();
+    }
+
+    // Get users by role
+    public List<UserResponseDto> getUsersByRole(String role) {
+        return userRepository.findAll()
+                .stream()
+                .filter(u -> role.equalsIgnoreCase(u.getRole()))
+                .map(user -> UserResponseDto.builder()
+                        .id(user.getId())
+                        .name(user.getName())
+                        .email(user.getEmail())
+                        .role(user.getRole())
+                        .designation(user.getDesignation())
+                        .status(user.getStatus())
+                        .createdAt(user.getCreatedAt())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
     // Get all user
     public List<UserResponseDto> getAllUsers() {
         List<User> users = userRepository.findAll();
@@ -170,6 +255,6 @@ public class UserService {
                         .status(user.getStatus())
                         .createdAt(user.getCreatedAt())
                         .build())
-                .collect(Collectors.toList()); //TODO: add this method in the admin service
+                .collect(Collectors.toList());
     }
 }

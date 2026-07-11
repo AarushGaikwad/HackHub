@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class PdfGeneratorService {
 
-    public byte[] generateCertificate(String participantName, String hackathonName, String organizerName, String issuedDate) throws Exception {
+    public byte[] generateCertificate(String participantName, String hackathonName, String organizerName, String issuedDate, String certificateType) throws Exception {
 
         // Load HTML template from resources
         InputStream templateStream = getClass().getResourceAsStream("/templates/certificate-pdf.html");
@@ -22,6 +22,7 @@ public class PdfGeneratorService {
         html = html.replace("{{hackathonName}}", hackathonName);
         html = html.replace("{{organizerName}}", organizerName);
         html = html.replace("{{issuedDate}}", issuedDate);
+        html = html.replace("{{certificateType}}", certificateType);
 
         // Generate PDF using OpenHtmlToPdf
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
