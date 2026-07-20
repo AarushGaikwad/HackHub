@@ -1,317 +1,345 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+
 <head>
-    <meta charset="UTF-8" />
+
+    <meta charset="UTF-8"/>
+
     <title>HackHub Certificate</title>
+
     <style>
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
         }
 
-        body {
-            background: #e6e6e6;
-            padding: 20px;
-            font-family: "Cormorant Garamond", Georgia, serif;
+        @page{
+            size:A4 landscape;
+            margin:5mm;
         }
 
-        .certificate {
-            width: 960px;
-            background: #FFFDF8;
-            position: relative;
-            border: 3px solid #183153;
-            padding: 15px;
-            overflow: hidden;
-            margin: 0 auto;
+        html,body{
+            margin:0;
+            padding:0;
+            background:#f5f5f5;
+            font-family:"Cormorant Garamond",serif;
         }
 
-        .certificate-type {
-            margin-top: 18px;
-            color: #B8892E;
-            font-size: 22px;
-            font-weight: 700;
-            font-family: "Playfair Display", serif;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+        body{
+            display:block;
         }
 
-        .inner-border {
-            border: 2px solid #B8892E;
-            padding: 50px 65px;
-            position: relative;
+        .certificate{
+            width:100%;
+            background:#ffffff;
+            border:4px solid #183153;
+            padding:10mm;
+            position:relative;
+            overflow:hidden;
         }
 
-        /* watermark seal */
-        .seal {
-            position: absolute;
-            top: 280px;
-            left: 290px;
-            width: 380px;
-            height: 380px;
-            opacity: 0.045;
-            z-index: 0;
+        .certificate-type{
+            margin-top:3mm;
+            margin-bottom:5mm;
+            font-family:"Playfair Display", serif;
+            font-size:16pt;
+            font-weight:bold;
+            color:#B8892E;
+            letter-spacing:2px;
+            text-transform:uppercase;
         }
 
-        .header, .content, .footer {
-            position: relative;
-            z-index: 1;
+        .watermark{
+            position:absolute;
+            top:50%;
+            left:50%;
+            transform:translate(-50%,-50%);
+            opacity:0.04;
         }
 
-        /* HEADER */
-        .header {
-            text-align: center;
+        .header{
+
+            text-align:center;
+            margin-bottom:4mm;
+
         }
 
-        .logo {
-            text-align: center;
-            margin-bottom: 14px;
+        .logo{
+            display:inline-block;
+            width:15mm;
+            height:15mm;
+            border-radius:50%;
+            background:#183153;
+            color:white;
+            text-align:center;
+            line-height:15mm;
+            font-size:18pt;
+            font-weight:bold;
+            font-family:"Playfair Display",serif;
         }
 
-        .logo-box {
-            display: inline-block;
-            width: 50px;
-            height: 50px;
-            background: #183153;
-            color: #D9BB78;
-            font-size: 22px;
-            font-weight: bold;
-            border-radius: 50%;
-            font-family: "Playfair Display", serif;
-            border: 2px solid #B8892E;
-            text-align: center;
-            line-height: 46px;
-            vertical-align: middle;
+        .brand{
+            display:inline-block;
+            margin-left:2mm;
+            vertical-align:middle;
+            font-size:20pt;
+            font-family:"Playfair Display",serif;
+            font-weight:bold;
+            color:#183153;
+            letter-spacing:2pt;
         }
 
-        .brand {
-            display: inline-block;
-            vertical-align: middle;
-            margin-left: 16px;
+        .title{
+            margin-top:6mm;
+            font-family:"Playfair Display",serif;
+            font-size:30pt;
+            font-weight:bold;
+            color:#183153;
+            letter-spacing:5pt;
         }
 
-        .brand h3 {
-            color: #183153;
-            font-family: "Playfair Display", serif;
-            letter-spacing: 3px;
-            font-size: 23px;
-            font-weight: 700;
+        .subtitle{
+            font-size:12pt;
+            color:#666666;
+            letter-spacing:4pt;
+            text-transform:uppercase;
         }
 
-        .brand-divider {
-            width: 120px;
-            height: 1px;
-            margin: 16px auto 0;
-            background: #B8892E;
-            text-align: center;
+        .content{
+            text-align:center;
+            margin-top:5mm;
         }
 
-        .brand-divider span {
-            display: inline-block;
-            width: 6px;
-            height: 6px;
-            background: #B8892E;
-            margin-top: -3px;
+        .presented{
+            font-size:14pt;
+            color:#666666;
         }
 
-        .title {
-            margin-top: 22px;
+        .participant{
+            margin-top:2mm;
+            font-family:"Great Vibes",cursive;
+            font-size:35pt;
+            color:#183153;
         }
 
-        .title h1 {
-            font-size: 52px;
-            color: #183153;
-            letter-spacing: 6px;
-            font-weight: 700;
-            font-family: "Playfair Display", serif;
+        .name-line{
+            width:90mm;
+            height:1px;
+            background:#cccccc;
+            margin:3mm auto 6mm;
         }
 
-        .title h2 {
-            margin-top: 8px;
-            color: #B8892E;
-            letter-spacing: 7px;
-            font-size: 17px;
-            font-weight: 500;
-            font-family: "Cormorant Garamond", serif;
-            text-transform: uppercase;
+        .award{
+            font-size:14pt;
+            color:#666666;
         }
 
-        /* CONTENT */
-        .content {
-            text-align: center;
-            margin-top: 36px;
+        .hackathon{
+            margin-top:4mm;
+            font-size:22pt;
+            font-family:"Playfair Display",serif;
+            color:#183153;
+            font-weight:bold;
         }
 
-        .presented {
-            font-family: "Cormorant Garamond", serif;
-            color: #666;
-            font-size: 17px;
-            letter-spacing: 1px;
+        .message{
+            width:75%;
+            margin:4mm auto;
+            font-size:12pt;
+            color:#555555;
+            line-height:1.45;
         }
 
-        .name {
-            margin: 14px 0;
-            font-size: 58px;
-            color: #183153;
-            font-family: "Great Vibes", cursive;
-            font-weight: 400;
+
+        .footer{
+            margin-top:8mm;
         }
 
-        .name-line {
-            width: 330px;
-            height: 1px;
-            background: #D7D1BF;
-            margin: 0 auto 22px;
+        .footer table{
+            width:100%;
+            border-collapse:collapse;
         }
 
-        .awarded {
-            font-family: "Cormorant Garamond", serif;
-            color: #666;
-            font-size: 17px;
-            letter-spacing: 1px;
+        .footer td{
+            width:33%;
+            vertical-align:top;
         }
 
-        .hackathon {
-            margin-top: 10px;
-            color: #183153;
-            font-size: 28px;
-            font-weight: 600;
-            font-family: "Playfair Display", serif;
+        .left{
+            text-align:left;
         }
 
-        .message {
-            width: 74%;
-            margin: 24px auto;
-            color: #666;
-            line-height: 1.75;
-            font-size: 15px;
-            font-family: "Cormorant Garamond", serif;
+        .center{
+            text-align:center;
         }
 
-        /* FOOTER */
-        .footer {
-            margin-top: 40px;
+        .right{
+            text-align:right;
         }
 
-        .footer-left {
-            width: 220px;
-            text-align: center;
-            float: left;
+        .signature{
+            font-family:"Great Vibes",cursive;
+            font-size:26pt;
+            color:#183153;
         }
 
-        .footer-right {
-            width: 220px;
-            text-align: center;
-            float: right;
+        .line{
+            width:50mm;
+            margin-top:1mm;
+            border-top:1px solid #999999;
         }
 
-        .footer-clear {
-            clear: both;
+        .footer-title{
+            margin-top:2mm;
+            font-size:11pt;
+            font-family:"Playfair Display",serif;
+            color:#183153;
+            font-weight:bold;
         }
 
-        .signature {
-            font-family: "Great Vibes", cursive;
-            font-size: 28px;
-            color: #183153;
-            margin-bottom: 2px;
-            height: 34px;
-        }
-
-        .footer-left hr,
-        .footer-right hr {
-            border: none;
-            border-top: 1px solid #D7D1BF;
-            margin-bottom: 10px;
-        }
-
-        .footer-left h4,
-        .footer-right h4 {
-            color: #183153;
-            font-size: 17px;
-            font-family: "Playfair Display", serif;
-            font-weight: 500;
-        }
-
-        .footer-left p,
-        .footer-right p {
-            font-size: 10.5px;
-            letter-spacing: 2px;
-            color: #777;
-            text-transform: uppercase;
-            font-family: Arial, sans-serif;
-            margin-top: 4px;
+        .footer-subtitle{
+            margin-top:1mm;
+            font-size:8pt;
+            color:#777777;
+            text-transform:uppercase;
+            letter-spacing:1pt;
         }
 
     </style>
+
 </head>
+
 <body>
 
 <div class="certificate">
 
+    <svg class="watermark"
+         width="250"
+         height="250"
+         viewBox="0 0 200 200">
+
+        <circle
+                cx="100"
+                cy="100"
+                r="90"
+                fill="none"
+                stroke="#183153"
+                stroke-width="2"/>
+
+        <circle
+                cx="100"
+                cy="100"
+                r="72"
+                fill="none"
+                stroke="#183153"
+                stroke-width="1"
+        />
 
 
-    <svg class="seal" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="100" cy="100" r="95" fill="none" stroke="#183153" stroke-width="2"/>
-        <circle cx="100" cy="100" r="82" fill="none" stroke="#B8892E" stroke-width="1.5"/>
-        <circle cx="100" cy="100" r="70" fill="none" stroke="#183153" stroke-width="1"/>
-        <text x="100" y="60" text-anchor="middle" font-family="Playfair Display, serif" font-size="14" fill="#183153">HACKHUB</text>
-        <text x="100" y="145" text-anchor="middle" font-family="Playfair Display, serif" font-size="12" fill="#183153">CERTIFIED</text>
-        <path d="M85 95 L96 108 L118 82" stroke="#B8892E" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <path
+                d="M82 95 L95 110 L120 82"
+                fill="none"
+                stroke="#183153"
+                stroke-width="4"
+        />
+
     </svg>
 
-    <div class="inner-border">
+    <div class="header">
 
-        <div class="header">
-            <div class="logo">
-                <span class="logo-box">H</span>
-                <span class="brand"><h3>HackHub</h3></span>
-            </div>
-            <div class="brand-divider"><span></span></div>
-            <div class="title">
-                <h1>CERTIFICATE</h1>
-                <h2>OF ACHIEVEMENT</h2>
-            </div>
+        <span class="logo">H</span>
+
+        <span class="brand">
+            HackHub
+        </span>
+
+        <div class="title">
+            CERTIFICATE
         </div>
 
-        <div class="content">
-            <p class="presented">This certificate is proudly presented to</p>
-            <div class="name">{{participantName}}</div>
-            <div class="name-line"></div>
-            <p class="awarded">In recognition of outstanding performance during</p>
-            <div class="hackathon">{{hackathonName}}</div>
-
-            <div class="certificate-type">
-                {{certificateType}}
-            </div>
-
-            <p class="message">
-                This certificate is awarded in recognition of your
-                dedication, innovation, teamwork, and technical excellence
-                demonstrated throughout the Hackathon.
-                We sincerely appreciate your participation and wish you
-                continued success in your academic and professional journey.
-            </p>
-        </div>
-
-        <div class="footer">
-            <div class="footer-left">
-                <div class="signature">{{organizerName}}</div>
-                <hr />
-                <h4>{{organizerName}}</h4>
-                <p>Organizer</p>
-            </div>
-            <div class="footer-right">
-                <hr style="margin-top:34px;" />
-                <h4>{{issuedDate}}</h4>
-                <p>Date Issued</p>
-            </div>
-            <div class="footer-clear"></div>
+        <div class="subtitle">
+            OF ACHIEVEMENT
         </div>
 
     </div>
+    <div class="content">
 
+        <div class="presented">
+            This certificate is proudly presented to
+        </div>
+
+        <div class="participant">
+            {{participantName}}
+        </div>
+
+        <div class="name-line"></div>
+
+        <div class="award">
+            In recognition of outstanding performance during
+        </div>
+
+        <div class="hackathon">
+            {{hackathonName}}
+        </div>
+
+        <div class="certificate-type">
+            {{certificateType}}
+        </div>
+
+
+        <p class="message">
+            This certificate is awarded in recognition of your
+            dedication, innovation, teamwork, and technical excellence
+            demonstrated throughout the Hackathon.
+            We sincerely appreciate your participation and wish you
+            continued success in your academic and professional journey.
+        </p>
+
+    </div>
+
+    <div class="footer">
+
+        <table>
+
+            <tr>
+
+                <td class="left">
+
+                    <div class="signature">
+                        {{organizerName}}
+                    </div>
+
+                    <div class="line"></div>
+
+                    <div class="footer-title">
+                        {{organizerName}}
+                    </div>
+
+                    <div class="footer-subtitle">
+                        Organizer
+                    </div>
+                </td>
+
+
+                <td class="right">
+
+                    <div class="footer-title">
+                        {{issuedDate}}
+                    </div>
+
+                    <div class="footer-subtitle">
+                        Issue Date
+                    </div>
+
+                    <br/>
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>
 
 </body>
+
 </html>
