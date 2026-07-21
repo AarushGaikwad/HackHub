@@ -4,15 +4,13 @@ import com.hackhub.entities.Organization;
 import com.hackhub.entities.User;
 import com.hackhub.repository.OrganizationRepository;
 import com.hackhub.repository.UserRepository;
-import com.hackhub.requestdto.JudgeRequestDto;
-import com.hackhub.requestdto.OrganizerRequestDto;
-import com.hackhub.requestdto.ParticipantRequestDto;
-import com.hackhub.requestdto.UserRequestDto;
-import com.hackhub.responsedto.JudgeResponseDto;
-import com.hackhub.responsedto.OrganizerResponseDto;
-import com.hackhub.responsedto.ParticipantResponseDto;
-import com.hackhub.responsedto.UserResponseDto;
+import com.hackhub.requestdto.*;
+import com.hackhub.responsedto.*;
+import com.hackhub.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,11 +22,51 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final OrganizationRepository organizationRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public UserService(OrganizationRepository organizationRepository, UserRepository userRepository) {
+    public UserService(OrganizationRepository organizationRepository, UserRepository userRepository,
+                       PasswordEncoder passwordEncoder, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
         this.organizationRepository = organizationRepository;
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
+        this.authenticationManager = authenticationManager;
+    }
+
+    // Login method
+    public LoginResponseDto loginUser(LoginRequestDto request) {
+        try{
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid email or password");
+        }
+
+        // Load user
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+
+        // Check if organizer is approved or not
+        if ("ORGANIZER".equalsIgnoreCase(user.getRole()) && "PENDING".equalsIgnoreCase(user.getStatus())){
+            throw new RuntimeException("Your account is not approved yet, please wait for the admin approval");
+        }
+
+        // Generate JWT token
+        String token = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getRole());
+
+        return LoginResponseDto.builder()
+                .token(token)
+                .userId(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .status(user.getStatus())
+                .build();
     }
 
     // Register Participant
@@ -54,7 +92,7 @@ public class UserService {
         User user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
-                .password(request.getPassword())
+                .password(passwordEncoder.encode(request.getPassword()))
                 .role("PARTICIPANT")
                 .status("APPROVED")
                 .organization(organization)
@@ -99,7 +137,7 @@ public class UserService {
         User user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
-                .password(request.getPassword())
+                .password(passwordEncoder.encode(request.getPassword()))
                 .role("ORGANIZER")
                 .status("PENDING")
                 .organization(organization)
@@ -135,7 +173,7 @@ public class UserService {
                 .name(request.getName())
                 .email(request.getEmail())
                 .designation(request.getDesignation())
-                .password(request.getPassword())
+                .password(passwordEncoder.encode(request.getPassword()))
                 .role("JUDGE")
                 .status("APPROVED")
                 .createdAt(LocalDateTime.now())
