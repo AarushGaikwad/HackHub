@@ -50,10 +50,5 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ResponseStatus.success(response));
     }
 
-    // Get all user
-    @GetMapping("/users")
-    public ResponseEntity<ResponseStatus<List<UserResponseDto>>> getAllUsers() {
-        List<UserResponseDto> response = userService.getAllUsers();
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseStatus.success(response));
-    }
+
 }
