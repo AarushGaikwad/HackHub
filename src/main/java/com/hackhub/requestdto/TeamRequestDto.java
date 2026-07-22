@@ -15,8 +15,4 @@ public class TeamRequestDto {
 
     @NotBlank(message = "Team name is required")
     private String name;
-
-
-    @NotNull(message = "User ID is required")
-    private Integer userId; // TODO: remove after JWT — extract from token
 }

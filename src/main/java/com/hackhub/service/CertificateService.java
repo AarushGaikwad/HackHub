@@ -3,6 +3,7 @@ package com.hackhub.service;
 import com.hackhub.entities.*;
 import com.hackhub.repository.*;
 import com.hackhub.responsedto.CertificateResponseDto;
+import com.hackhub.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class CertificateService {
     private final TeamMemberRepository teamMemberRepository;
     private final PdfGeneratorService pdfGeneratorService;
     private final EmailService emailService;
+    private final SecurityUtils securityUtils;
 
     @Autowired
     public CertificateService(CertificateRepository certificateRepository,
@@ -32,7 +34,7 @@ public class CertificateService {
                               UserRepository userRepository,
                               TeamMemberRepository teamMemberRepository,
                               PdfGeneratorService pdfGeneratorService,
-                              EmailService emailService) {
+                              EmailService emailService, SecurityUtils securityUtils) {
         this.certificateRepository = certificateRepository;
         this.hackathonRepository = hackathonRepository;
         this.teamRegistrationRepository = teamRegistrationRepository;
@@ -41,10 +43,13 @@ public class CertificateService {
         this.teamMemberRepository = teamMemberRepository;
         this.pdfGeneratorService = pdfGeneratorService;
         this.emailService = emailService;
+        this.securityUtils = securityUtils;
     }
 
     // Generate certificates for a hackathon
-    public List<CertificateResponseDto> generateCertificates(Integer hackathonId, Integer organizerId) {
+    public List<CertificateResponseDto> generateCertificates(Integer hackathonId) {
+
+        Integer organizerId = securityUtils.getCurrentUserId();
 
         // Validate hackathon exits
         Hackathon hackathon = hackathonRepository.findById(hackathonId).orElseThrow(
@@ -127,7 +132,8 @@ public class CertificateService {
     }
 
     // Get all certificates for logged in participant
-    public List<CertificateResponseDto> getMyCertificates(Integer userId) {
+    public List<CertificateResponseDto> getMyCertificates() {
+        Integer userId = securityUtils.getCurrentUserId();
         userRepository.findById(userId).orElseThrow(() ->
                 new RuntimeException("User not found with id: " + userId));
 

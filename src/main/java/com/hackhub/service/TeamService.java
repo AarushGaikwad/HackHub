@@ -5,6 +5,7 @@ import com.hackhub.repository.*;
 import com.hackhub.requestdto.TeamRequestDto;
 import com.hackhub.responsedto.TeamMemberResponseDto;
 import com.hackhub.responsedto.TeamResponseDto;
+import com.hackhub.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,24 +21,27 @@ public class TeamService {
     private final TeamMemberRepository teamMemberRepository;
     private final UserRepository userRepository;
     private final TeamRegistrationRepository teamRegistrationRepository;
+    private final SecurityUtils securityUtils;
 
     @Autowired
     public TeamService(TeamRepository teamRepository,
                        TeamMemberRepository teamMemberRepository,
                        UserRepository userRepository,
-                       TeamRegistrationRepository teamRegistrationRepository) {
+                       TeamRegistrationRepository teamRegistrationRepository, SecurityUtils securityUtils) {
         this.teamRepository = teamRepository;
         this.teamMemberRepository = teamMemberRepository;
         this.userRepository = userRepository;
         this.teamRegistrationRepository = teamRegistrationRepository;
+        this.securityUtils = securityUtils;
     }
 
     // Create Team
     public TeamResponseDto createTeam(TeamRequestDto request) {
 
         // Validate user exists and is PARTICIPANT
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + request.getUserId()));
+        Integer userId = securityUtils.getCurrentUserId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (!"PARTICIPANT".equalsIgnoreCase(user.getRole()))
             throw new RuntimeException("Only PARTICIPANT can create a team");
@@ -110,25 +114,26 @@ public class TeamService {
     }
 
     // Join Team via invite code
-    public TeamResponseDto joinTeam(String inviteCode, Integer userId) {
+    public TeamResponseDto joinTeam(String inviteCode) {
 
-        // 1. Validate invite code exists
+        Integer userId = securityUtils.getCurrentUserId();
+
+        // Validate invite code exists
         Team team = teamRepository.findByInviteCode(inviteCode)
                 .orElseThrow(() -> new RuntimeException("Invalid invite code"));
 
-        // 2. Validate user exists and is PARTICIPANT
+        // Validate user exists and is PARTICIPANT
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (!"PARTICIPANT".equalsIgnoreCase(user.getRole()))
             throw new RuntimeException("Only PARTICIPANT can join a team");
 
-        // 3. Check user not already a member of this team
+        // Check user not already a member of this team
         if (teamMemberRepository.existsByTeamIdAndUserId(team.getId(), userId))
             throw new RuntimeException("You are already a member of this team");
 
-        // 4. Check if team is registered for any hackathon
-        //    and if so, check user not already in another team for same hackathon
+        // Check if team is registered for any hackathon and if so, check user not already in another team for same hackathon
         List<TeamRegistration> registrations = teamRegistrationRepository.findByTeamId(team.getId());
         for (TeamRegistration registration : registrations) {
             if (teamRegistrationRepository.existsByUserIdAndHackathonId(
@@ -139,7 +144,7 @@ public class TeamService {
             }
         }
 
-        // 5. Check team size against hackathon maxTeamSize
+        // Check team size against hackathon maxTeamSize
         Integer currentMemberCount = teamMemberRepository.countByTeamId(team.getId());
         for (TeamRegistration registration : registrations) {
             Hackathon hackathon = registration.getHackathon();
@@ -150,7 +155,7 @@ public class TeamService {
             }
         }
 
-        // 6. Add user as TeamMember
+        // Add user as TeamMember
         TeamMember teamMember = TeamMember.builder()
                 .team(team)
                 .user(user)
@@ -162,9 +167,9 @@ public class TeamService {
     }
 
     // Transfer Leadership
-    public TeamResponseDto transferLeadership(Integer teamId,
-                                              Integer currentLeaderId,
-                                              Integer newLeaderId) {
+    public TeamResponseDto transferLeadership(Integer teamId, Integer newLeaderId) {
+
+        Integer currentLeaderId = securityUtils.getCurrentUserId();
 
         // Validate team exists
         Team team = teamRepository.findByIdWithDetails(teamId)
@@ -190,7 +195,9 @@ public class TeamService {
     }
 
     // Leave Team
-    public void leaveTeam(Integer teamId, Integer userId) {
+    public void leaveTeam(Integer teamId) {
+
+        Integer userId = securityUtils.getCurrentUserId();
 
         // Validate team exists
         Team team = teamRepository.findByIdWithDetails(teamId)
@@ -224,7 +231,9 @@ public class TeamService {
     }
 
     // Delete Team
-    public void deleteTeam(Integer teamId, Integer userId) {
+    public void deleteTeam(Integer teamId) {
+
+        Integer userId = securityUtils.getCurrentUserId();
 
         // Validate team exists
         Team team = teamRepository.findByIdWithDetails(teamId)

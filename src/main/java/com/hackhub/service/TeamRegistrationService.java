@@ -3,6 +3,7 @@ package com.hackhub.service;
 import com.hackhub.entities.*;
 import com.hackhub.repository.*;
 import com.hackhub.responsedto.TeamRegistrationResponseDto;
+import com.hackhub.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,24 +20,26 @@ public class TeamRegistrationService {
     private final HackathonRepository hackathonRepository;
     private final TeamMemberRepository teamMemberRepository;
     private final UserRepository userRepository;
+    private final SecurityUtils securityUtils;
 
     @Autowired
     public TeamRegistrationService(TeamRegistrationRepository teamRegistrationRepository,
                                    TeamRepository teamRepository,
                                    HackathonRepository hackathonRepository,
                                    TeamMemberRepository teamMemberRepository,
-                                   UserRepository userRepository) {
+                                   UserRepository userRepository, SecurityUtils securityUtils) {
         this.teamRegistrationRepository = teamRegistrationRepository;
         this.teamRepository = teamRepository;
         this.hackathonRepository = hackathonRepository;
         this.teamMemberRepository = teamMemberRepository;
         this.userRepository = userRepository;
+        this.securityUtils = securityUtils;
     }
 
     // Register team for hackathon
-    public TeamRegistrationResponseDto registerTeam(Integer hackathonId,
-                                                    Integer teamId,
-                                                    Integer userId) {
+    public TeamRegistrationResponseDto registerTeam(Integer hackathonId, Integer teamId) {
+
+        Integer userId = securityUtils.getCurrentUserId();
 
         // Validate hackathon exists
         Hackathon hackathon = hackathonRepository.findById(hackathonId)
@@ -105,7 +108,9 @@ public class TeamRegistrationService {
     }
 
     // Withdraw team from hackathon
-    public void withdrawTeam(Integer hackathonId, Integer teamId, Integer userId) {
+    public void withdrawTeam(Integer hackathonId, Integer teamId) {
+
+        Integer userId = securityUtils.getCurrentUserId();
 
         // Validate registration exists
         TeamRegistration registration = teamRegistrationRepository

@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class OrganizationController {
     }
 
     // Create organization
+    @PreAuthorize("hasRole('ORGANIZER')")
     @PostMapping("/create")
     public ResponseEntity<ResponseStatus<OrganizationResponseDto>> createOrganization(@RequestBody @Valid OrganizationRequestDto organizationRequestDto) {
         OrganizationResponseDto response = organizationService.createOrganization(organizationRequestDto);
@@ -31,6 +33,7 @@ public class OrganizationController {
     }
 
     // Get all organizations
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/organizations")
     public ResponseEntity<ResponseStatus<List<OrganizationResponseDto>>> getAllOrganizations() {
         List<OrganizationResponseDto> responseList = organizationService.getAllOrganizations();
