@@ -6,6 +6,7 @@ import com.hackhub.repository.OrganizationRepository;
 import com.hackhub.repository.UserRepository;
 import com.hackhub.requestdto.*;
 import com.hackhub.responsedto.*;
+import com.hackhub.security.SecurityUtils;
 import com.hackhub.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;

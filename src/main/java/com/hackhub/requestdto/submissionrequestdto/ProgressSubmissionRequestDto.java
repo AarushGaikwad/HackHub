@@ -16,9 +16,6 @@ public class ProgressSubmissionRequestDto {
     @NotNull(message = "Team Registration ID is required")
     private Integer teamRegistrationId;
 
-    @NotNull(message = "User ID is required")
-    private Integer userId; // TODO: remove after JWT
-
     @NotBlank(message = "Title is required")
     private String title;
 

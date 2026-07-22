@@ -11,6 +11,7 @@ import com.hackhub.service.HackathonService;
 import com.hackhub.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,6 +39,7 @@ public class AdminController {
     // ─── User Management ─────────────────────────────────────────────────────
 
     // Get all users
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/users")
     public ResponseEntity<ResponseStatus<List<UserResponseDto>>> getAllUsers() {
         List<UserResponseDto> response = userService.getAllUsers();
@@ -45,6 +47,7 @@ public class AdminController {
     }
 
     // Get user by id
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/users/{userId}")
     public ResponseEntity<ResponseStatus<UserResponseDto>> getUserById(
             @PathVariable Integer userId) {
@@ -53,6 +56,7 @@ public class AdminController {
     }
 
     // Get user by role
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/users/role/{role}")
     public ResponseEntity<ResponseStatus<List<UserResponseDto>>> getUsersByRole(
             @PathVariable String role) {
@@ -61,6 +65,7 @@ public class AdminController {
     }
 
     // Approve organizer
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/users/{userId}/approve")
     public ResponseEntity<ResponseStatus<UserResponseDto>> approveOrganizer(
             @PathVariable Integer userId) {
@@ -69,6 +74,7 @@ public class AdminController {
     }
 
     // Reject organizer
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/users/{userId}/reject")
     public ResponseEntity<ResponseStatus<UserResponseDto>> rejectOrganizer(
             @PathVariable Integer userId) {
@@ -79,6 +85,7 @@ public class AdminController {
     // ─── Hackathon Management ─────────────────────────────────────────────────
 
     // Get all hackathons
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/hackathons")
     public ResponseEntity<ResponseStatus<List<HackathonResponseDto>>> getAllHackathons() {
         List<HackathonResponseDto> response = hackathonService.getAllHackathons();
@@ -86,6 +93,7 @@ public class AdminController {
     }
 
     // Delete hackathon
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/hackathons/{hackathonId}")
     public ResponseEntity<ResponseStatus<String>> deleteHackathon(
             @PathVariable Integer hackathonId) {
@@ -96,6 +104,7 @@ public class AdminController {
     // ─── Certificate Management ───────────────────────────────────────────────
 
     // Get all certificates
+    @PreAuthorize("hasAnyRole('ADMIN' , 'ORGANIZER')")
     @GetMapping("/certificates")
     public ResponseEntity<ResponseStatus<List<CertificateResponseDto>>> getAllCertificates() {
         List<CertificateResponseDto> response = certificateService.getAllCertificates();
@@ -105,6 +114,7 @@ public class AdminController {
     // ─── Platform Stats ───────────────────────────────────────────────────────
 
     // Platform status (dashboard api)
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/stats/overview")
     public ResponseEntity<ResponseStatus<AdminStatsResponseDto>> getOverviewStats() {
         AdminStatsResponseDto response = adminService.getOverviewStats();

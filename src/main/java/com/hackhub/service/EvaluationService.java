@@ -4,6 +4,7 @@ import com.hackhub.entities.*;
 import com.hackhub.repository.*;
 import com.hackhub.requestdto.EvaluationRequestDto;
 import com.hackhub.responsedto.*;
+import com.hackhub.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,18 +22,20 @@ public class EvaluationService {
     private final SubmissionRepository submissionRepository;
     private final UserRepository userRepository;
     private final HackathonRepository hackathonRepository;
+    private final SecurityUtils securityUtils;
 
     @Autowired
     public EvaluationService(EvaluationRepository evaluationRepository,
                              JudgeAssignmentRepository judgeAssignmentRepository,
                              SubmissionRepository submissionRepository,
                              UserRepository userRepository,
-                             HackathonRepository hackathonRepository) {
+                             HackathonRepository hackathonRepository, SecurityUtils securityUtils) {
         this.evaluationRepository = evaluationRepository;
         this.judgeAssignmentRepository = judgeAssignmentRepository;
         this.submissionRepository = submissionRepository;
         this.userRepository = userRepository;
         this.hackathonRepository = hackathonRepository;
+        this.securityUtils = securityUtils;
     }
 
     // Assign judge to hackathon
@@ -141,25 +144,23 @@ public class EvaluationService {
     // Submit evaluation
     public EvaluationResponseDto submitEvaluation(EvaluationRequestDto request) {
 
+        Integer judgeId = securityUtils.getCurrentUserId();
+
         // Validate submission exists
         Submission submission = submissionRepository.findById(request.getSubmissionId())
-                .orElseThrow(() -> new RuntimeException(
-                        "Submission not found with id: " + request.getSubmissionId()));
+                .orElseThrow(() -> new RuntimeException("Submission not found with id: " + request.getSubmissionId()));
 
         // Validate judge exists
-        User judge = userRepository.findById(request.getJudgeId())
-                .orElseThrow(() -> new RuntimeException(
-                        "User not found with id: " + request.getJudgeId()));
+        User judge = userRepository.findById(judgeId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (!"JUDGE".equalsIgnoreCase(judge.getRole()))
             throw new RuntimeException("User is not a judge");
 
         // Validate judge is assigned to this hackathon
         Integer hackathonId = submission.getTeamRegistration().getHackathon().getId();
-        if (!judgeAssignmentRepository.existsByHackathonIdAndJudgeIdAndStatus(
-                hackathonId, request.getJudgeId(), "ACTIVE"))
-            throw new RuntimeException(
-                    "Judge is not assigned to this hackathon");
+        if (!judgeAssignmentRepository.existsByHackathonIdAndJudgeIdAndStatus(hackathonId, judgeId, "ACTIVE"))
+            throw new RuntimeException("Judge is not assigned to this hackathon");
 
         // Check hackathon is ACTIVE
         Hackathon hackathon = submission.getTeamRegistration().getHackathon();
@@ -171,7 +172,7 @@ public class EvaluationService {
 
         // Check duplicate evaluation
         if (evaluationRepository.existsBySubmissionIdAndJudgeId(
-                request.getSubmissionId(), request.getJudgeId()))
+                request.getSubmissionId(), judgeId))
             throw new RuntimeException(
                     "You have already evaluated this submission");
 
@@ -189,9 +190,9 @@ public class EvaluationService {
     }
 
     // Update evaluation
-    public EvaluationResponseDto updateEvaluation(Integer evaluationId,
-                                                  Integer judgeId,
-                                                  EvaluationRequestDto request) {
+    public EvaluationResponseDto updateEvaluation(Integer evaluationId, EvaluationRequestDto request) {
+
+        Integer judgeId = securityUtils.getCurrentUserId();
 
         // Validate evaluation exists
         Evaluation evaluation = evaluationRepository.findById(evaluationId)

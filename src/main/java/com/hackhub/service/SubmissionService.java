@@ -8,6 +8,7 @@ import com.hackhub.repository.UserRepository;
 import com.hackhub.requestdto.submissionrequestdto.FinalSubmissionRequestDto;
 import com.hackhub.requestdto.submissionrequestdto.ProgressSubmissionRequestDto;
 import com.hackhub.responsedto.SubmissionResponseDto;
+import com.hackhub.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,20 +23,24 @@ public class SubmissionService {
     private final TeamRegistrationRepository teamRegistrationRepository;
     private final TeamMemberRepository teamMemberRepository;
     private final UserRepository userRepository;
+    private final SecurityUtils securityUtils;
 
     @Autowired
     public SubmissionService(SubmissionRepository submissionRepository,
                              TeamRegistrationRepository teamRegistrationRepository,
                              TeamMemberRepository teamMemberRepository,
-                             UserRepository userRepository) {
+                             UserRepository userRepository, SecurityUtils securityUtils) {
         this.submissionRepository = submissionRepository;
         this.teamRegistrationRepository = teamRegistrationRepository;
         this.teamMemberRepository = teamMemberRepository;
         this.userRepository = userRepository;
+        this.securityUtils = securityUtils;
     }
 
     // Submit Progress Update
     public SubmissionResponseDto submitProgress(ProgressSubmissionRequestDto request) {
+
+        Integer userId = securityUtils.getCurrentUserId();
 
         // 1. Validate team registration exists
         TeamRegistration teamRegistration = teamRegistrationRepository
@@ -51,12 +56,12 @@ public class SubmissionService {
             throw new RuntimeException("Hackathon has already ended");
 
         // Validate user exists
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + request.getUserId()));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         // Validate user is a member of the team
         if (!teamMemberRepository.existsByTeamIdAndUserId(
-                teamRegistration.getTeam().getId(), request.getUserId()))
+                teamRegistration.getTeam().getId(), userId))
             throw new RuntimeException("You are not a member of this team");
 
         // Check if FINAL submission already exists — block progress after final
@@ -83,6 +88,8 @@ public class SubmissionService {
     // Submit Final Submission
     public SubmissionResponseDto submitFinal(FinalSubmissionRequestDto request) {
 
+        Integer userId = securityUtils.getCurrentUserId();
+
         // Validate team registration exists
         TeamRegistration teamRegistration = teamRegistrationRepository
                 .findById(request.getTeamRegistrationId())
@@ -97,12 +104,12 @@ public class SubmissionService {
             throw new RuntimeException("Hackathon has already ended");
 
         // Validate user exists
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + request.getUserId()));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         // Validate user is team leader
         Team team = teamRegistration.getTeam();
-        if (!team.getLeader().getId().equals(request.getUserId()))
+        if (!team.getLeader().getId().equals(userId))
             throw new RuntimeException("Only team leader can make final submission");
 
         // Check if FINAL submission already exists
@@ -127,9 +134,9 @@ public class SubmissionService {
     }
 
     // Edit Progress Submission
-    public SubmissionResponseDto editProgressSubmission(Integer submissionId,
-                                                        Integer userId,
-                                                        ProgressSubmissionRequestDto request) {
+    public SubmissionResponseDto editProgressSubmission(Integer submissionId, ProgressSubmissionRequestDto request) {
+
+        Integer userId = securityUtils.getCurrentUserId();
 
         // Validate submission exists
         Submission submission = submissionRepository.findById(submissionId)
@@ -165,7 +172,9 @@ public class SubmissionService {
     }
 
     // Delete Progress Submission
-    public void deleteProgressSubmission(Integer submissionId, Integer userId) {
+    public void deleteProgressSubmission(Integer submissionId) {
+
+        Integer userId = securityUtils.getCurrentUserId();
 
         // Validate submission exists
         Submission submission = submissionRepository.findById(submissionId)
