@@ -173,7 +173,7 @@ const AuthPage = () => {
     setError("");
     setLoading(true);
     try {
-      const res = await api.post("/api/auth/login", loginForm);
+      const res = await api.post("/login", loginForm);
       login(res.data.data);
       navigate(getDashboard(res.data.data.role));
     } catch (err) {
@@ -200,9 +200,9 @@ const AuthPage = () => {
     setLoading(true);
     try {
       const endpoints = {
-        PARTICIPANT: "/api/auth/register/participant",
-        ORGANIZER: "/api/auth/register/organizer",
-        JUDGE: "/api/auth/register/judge",
+        PARTICIPANT: "/user/register/participant",
+        ORGANIZER: "/user/register/organizer",
+        JUDGE: "/user/register/judge",
       };
 
       const payloads = {
