@@ -1,19 +1,6 @@
-import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import {
-  Mail,
-  Lock,
-  User,
-  Phone,
-  Building,
-  Briefcase,
-  ArrowRight,
-  ArrowLeft,
-  Sun,
-  Moon,
-  Eye,
-  EyeOff,
-} from "lucide-react";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Mail, Lock, User, Phone, Building, Briefcase, ArrowRight, ArrowLeft, Sun, Moon, Eye, EyeOff, User2, Building2, Scale } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
 import api from "../../api/axiosConfig";
@@ -22,21 +9,21 @@ const roles = [
   {
     role: "PARTICIPANT",
     label: "Participant",
-    icon: "🧑‍💻",
+    icon: User2,
     desc: "Join hackathons, form teams, and submit projects",
     color: "#4F46E5",
   },
   {
     role: "ORGANIZER",
     label: "Organizer",
-    icon: "🏆",
+    icon: Building2,
     desc: "Create and manage hackathons for your college",
     color: "#0891B2",
   },
   {
     role: "JUDGE",
     label: "Judge",
-    icon: "⚖️",
+    icon: Scale,
     desc: "Evaluate submissions and score projects",
     color: "#D97706",
   },
@@ -136,13 +123,8 @@ const AuthPage = () => {
   const { login } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const isRegisterMode =
-    new URLSearchParams(location.search).get("mode") === "register";
-  const [activeTab, setActiveTab] = useState(
-    isRegisterMode ? "register" : "login",
-  );
+  const [activeTab, setActiveTab] = useState("login");
   const [selectedRole, setSelectedRole] = useState(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -258,13 +240,6 @@ const AuthPage = () => {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    setActiveTab(isRegisterMode ? "register" : "login");
-    setSelectedRole(null);
-    setError("");
-    setSuccess("");
-  }, [isRegisterMode]);
 
   const update = (key) => (e) =>
     setRegisterForm((prev) => ({ ...prev, [key]: e.target.value }));
@@ -591,9 +566,9 @@ const AuthPage = () => {
                     marginBottom: "4px",
                   }}
                 >
-                  Register as
+                  I want to register as
                 </p>
-                {roles.map(({ role, label, icon, desc, color }) => (
+                {roles.map(({ role, label, icon: Icon, desc, color }) => (
                   <button
                     key={role}
                     onClick={() => {
@@ -635,7 +610,11 @@ const AuthPage = () => {
                         flexShrink: 0,
                       }}
                     >
-                      {icon}
+                      <Icon
+                        size={22}
+                        strokeWidth={2}
+                        color={color} 
+                      />
                     </div>
                     <div style={{ flex: 1 }}>
                       <div

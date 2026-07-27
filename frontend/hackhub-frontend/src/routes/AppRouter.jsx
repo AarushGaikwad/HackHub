@@ -9,8 +9,11 @@ import AuthPage from '../pages/public/AuthPage';
 // Admin pages
 import AdminDashboard from '../pages/admin/AdminDashboard';
 
+// Participant pages
+import ParticipantDashboard from '../pages/participant/ParticipantDashboard';
+import HackathonDetailPage from '../pages/participant/HackathonDetailPage';
+
 // Placeholder pages — will build these later
-const ParticipantDashboard = () => <div>Participant Dashboard</div>;
 const OrganizerDashboard = () => <div>Organizer Dashboard</div>;
 const JudgeDashboard = () => <div>Judge Dashboard</div>;
 
@@ -48,6 +51,15 @@ const AppRouter = () => {
                     element={
                         <ProtectedRoute allowedRoles={['PARTICIPANT']}>
                             <ParticipantDashboard />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path='/participant/hackathon/:id'
+                    element={
+                        <ProtectedRoute allowedRoles={['PARTICIPANT']}>
+                            <HackathonDetailPage/>
                         </ProtectedRoute>
                     }
                 />
