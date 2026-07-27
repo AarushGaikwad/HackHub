@@ -1,19 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  Mail,
-  Lock,
-  User,
-  Phone,
-  Building,
-  Briefcase,
-  ArrowRight,
-  ArrowLeft,
-  Sun,
-  Moon,
-  Eye,
-  EyeOff,
-} from "lucide-react";
+import { Mail, Lock, User, Phone, Building, Briefcase, ArrowRight, ArrowLeft, Sun, Moon, Eye, EyeOff, User2, Building2, Scale } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
 import api from "../../api/axiosConfig";
@@ -22,21 +9,21 @@ const roles = [
   {
     role: "PARTICIPANT",
     label: "Participant",
-    icon: "🧑‍💻",
+    icon: User2,
     desc: "Join hackathons, form teams, and submit projects",
     color: "#4F46E5",
   },
   {
     role: "ORGANIZER",
     label: "Organizer",
-    icon: "🏆",
+    icon: Building2,
     desc: "Create and manage hackathons for your college",
     color: "#0891B2",
   },
   {
     role: "JUDGE",
     label: "Judge",
-    icon: "⚖️",
+    icon: Scale,
     desc: "Evaluate submissions and score projects",
     color: "#D97706",
   },
@@ -168,7 +155,7 @@ const AuthPage = () => {
     setError("");
     setLoading(true);
     try {
-      const res = await api.post("/api/auth/login", loginForm);
+      const res = await api.post("/login", loginForm);
       login(res.data.data);
       navigate(getDashboard(res.data.data.role));
     } catch (err) {
@@ -195,9 +182,9 @@ const AuthPage = () => {
     setLoading(true);
     try {
       const endpoints = {
-        PARTICIPANT: "/api/auth/register/participant",
-        ORGANIZER: "/api/auth/register/organizer",
-        JUDGE: "/api/auth/register/judge",
+        PARTICIPANT: "/user/register/participant",
+        ORGANIZER: "/user/register/organizer",
+        JUDGE: "/user/register/judge",
       };
 
       const payloads = {
@@ -581,7 +568,7 @@ const AuthPage = () => {
                 >
                   I want to register as
                 </p>
-                {roles.map(({ role, label, icon, desc, color }) => (
+                {roles.map(({ role, label, icon: Icon, desc, color }) => (
                   <button
                     key={role}
                     onClick={() => {
@@ -623,7 +610,11 @@ const AuthPage = () => {
                         flexShrink: 0,
                       }}
                     >
-                      {icon}
+                      <Icon
+                        size={22}
+                        strokeWidth={2}
+                        color={color} 
+                      />
                     </div>
                     <div style={{ flex: 1 }}>
                       <div

@@ -196,50 +196,6 @@ const LandingPage = () => {
                 </div>
             </section>
 
-            {/* ── STATS ── */}
-            <section style={{
-                backgroundColor: 'var(--surface)',
-                borderTop: '1px solid var(--border)',
-                borderBottom: '1px solid var(--border)',
-                padding: '48px 40px',
-            }}>
-                <div style={{
-                    maxWidth: '1280px',
-                    margin: '0 auto',
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(3, 1fr)',
-                }}>
-                    {[
-                        { value: '500+', label: 'Participants registered' },
-                        { value: '50+', label: 'Hackathons hosted' },
-                        { value: '1,000+', label: 'Certificates issued' },
-                    ].map((stat, i) => (
-                        <div key={stat.label} style={{
-                            textAlign: 'center',
-                            padding: '16px 32px',
-                            borderRight: i < 2 ? '1px solid var(--border)' : 'none',
-                        }}>
-                            <div style={{
-                                fontSize: '42px',
-                                fontWeight: '800',
-                                color: 'var(--brand)',
-                                letterSpacing: '-1.5px',
-                                lineHeight: '1',
-                                marginBottom: '8px',
-                            }}>
-                                {stat.value}
-                            </div>
-                            <div style={{
-                                fontSize: '14px',
-                                color: 'var(--text-secondary)',
-                                fontWeight: '500',
-                            }}>
-                                {stat.label}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </section>
 
             {/* ── HOW IT WORKS ── */}
             <section style={{
@@ -321,108 +277,6 @@ const LandingPage = () => {
                 </div>
             </section>
 
-            {/* ── ROLES ── */}
-            <section style={{
-                backgroundColor: 'var(--surface)',
-                borderTop: '1px solid var(--border)',
-                borderBottom: '1px solid var(--border)',
-                padding: '104px 40px',
-            }}>
-                <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-                    <div style={{ textAlign: 'center', marginBottom: '64px' }}>
-                        <h2 style={{
-                            fontSize: '36px',
-                            fontWeight: '800',
-                            color: 'var(--text)',
-                            letterSpacing: '-0.8px',
-                            marginBottom: '14px',
-                        }}>
-                            Built for every role
-                        </h2>
-                        <p style={{
-                            fontSize: '16px',
-                            color: 'var(--text-secondary)',
-                        }}>
-                            One platform, four distinct experiences
-                        </p>
-                    </div>
-
-                    <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(2, 1fr)',
-                        gap: '20px',
-                    }}>
-                        {roles.map(({ role, icon: Icon, desc, features, accent }) => (
-                            <div key={role} style={{
-                                backgroundColor: 'var(--bg)',
-                                border: '1px solid var(--border)',
-                                borderRadius: '20px',
-                                padding: '36px',
-                                transition: 'all 0.2s ease',
-                            }}>
-                                <div style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '14px',
-                                    marginBottom: '16px',
-                                }}>
-                                    <div style={{
-                                        width: '48px', height: '48px',
-                                        borderRadius: '14px',
-                                        backgroundColor: `${accent}18`,
-                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                        flexShrink: 0,
-                                    }}>
-                                        <Icon size={22} color={accent} />
-                                    </div>
-                                    <h3 style={{
-                                        fontSize: '20px',
-                                        fontWeight: '700',
-                                        color: 'var(--text)',
-                                        letterSpacing: '-0.3px',
-                                    }}>
-                                        {role}
-                                    </h3>
-                                </div>
-
-                                <p style={{
-                                    fontSize: '14px',
-                                    color: 'var(--text-secondary)',
-                                    lineHeight: '1.7',
-                                    marginBottom: '24px',
-                                }}>
-                                    {desc}
-                                </p>
-
-                                <div style={{
-                                    borderTop: '1px solid var(--border)',
-                                    paddingTop: '20px',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: '10px',
-                                }}>
-                                    {features.map(f => (
-                                        <div key={f} style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '10px',
-                                        }}>
-                                            <CheckCircle size={15} color={accent} />
-                                            <span style={{
-                                                fontSize: '13px',
-                                                color: 'var(--text-secondary)',
-                                                fontWeight: '500',
-                                            }}>
-                                                {f}
-                                            </span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
 
             {/* ── CTA ── */}
             <section style={{
@@ -513,7 +367,7 @@ const LandingPage = () => {
                             fontWeight: '700', fontSize: '13px',
                         }}>H</div>
                         <span style={{ color: 'var(--text-secondary)', fontSize: '13px', fontWeight: '500' }}>
-                            HackHub © 2025
+                            HackHub © 2026
                         </span>
                     </div>
                     <span style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>
