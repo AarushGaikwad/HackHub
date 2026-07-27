@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Mail,
   Lock,
@@ -136,13 +136,8 @@ const AuthPage = () => {
   const { login } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const isRegisterMode =
-    new URLSearchParams(location.search).get("mode") === "register";
-  const [activeTab, setActiveTab] = useState(
-    isRegisterMode ? "register" : "login",
-  );
+  const [activeTab, setActiveTab] = useState("login");
   const [selectedRole, setSelectedRole] = useState(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -173,7 +168,7 @@ const AuthPage = () => {
     setError("");
     setLoading(true);
     try {
-      const res = await api.post("/login", loginForm);
+      const res = await api.post("/api/auth/login", loginForm);
       login(res.data.data);
       navigate(getDashboard(res.data.data.role));
     } catch (err) {
@@ -200,9 +195,9 @@ const AuthPage = () => {
     setLoading(true);
     try {
       const endpoints = {
-        PARTICIPANT: "/user/register/participant",
-        ORGANIZER: "/user/register/organizer",
-        JUDGE: "/user/register/judge",
+        PARTICIPANT: "/api/auth/register/participant",
+        ORGANIZER: "/api/auth/register/organizer",
+        JUDGE: "/api/auth/register/judge",
       };
 
       const payloads = {
@@ -258,13 +253,6 @@ const AuthPage = () => {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    setActiveTab(isRegisterMode ? "register" : "login");
-    setSelectedRole(null);
-    setError("");
-    setSuccess("");
-  }, [isRegisterMode]);
 
   const update = (key) => (e) =>
     setRegisterForm((prev) => ({ ...prev, [key]: e.target.value }));
@@ -591,7 +579,7 @@ const AuthPage = () => {
                     marginBottom: "4px",
                   }}
                 >
-                  Register as
+                  I want to register as
                 </p>
                 {roles.map(({ role, label, icon, desc, color }) => (
                   <button
