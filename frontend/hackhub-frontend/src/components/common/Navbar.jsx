@@ -129,16 +129,6 @@ const Navbar = () => {
                             }}>
                                 {user.name}
                             </span>
-                            <span style={{
-                                fontSize: '11px',
-                                color: 'var(--brand)',
-                                fontWeight: '600',
-                                backgroundColor: 'var(--brand-bg)',
-                                padding: '2px 6px',
-                                borderRadius: '6px',
-                            }}>
-                                {user.role}
-                            </span>
                         </div>
                     )}
 

@@ -40,7 +40,7 @@ public class HackathonController {
     }
 
     // get hackathon by id
-    @PreAuthorize("hasRole('ORGANIZER')")
+    @PreAuthorize("hasAnyRole('ORGANIZER', 'PARTICIPANT')")
     @GetMapping("/{id}")
     public ResponseEntity<ResponseStatus<HackathonResponseDto>> getHackathonById(@PathVariable Integer id) {
         HackathonResponseDto response = hackathonService.getHackathonById(id);
