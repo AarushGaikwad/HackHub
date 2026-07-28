@@ -26,7 +26,7 @@
       "favicon": "./assets/favicon.png"
     },
     "extra" : {
-      "apiBaseUrl": "http://10.148.246.217:8080"
+      "apiBaseUrl": "http://10.40.124.217:8080"
     },
     "plugins": [
       "expo-secure-store"
