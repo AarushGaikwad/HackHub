@@ -13,9 +13,12 @@ import AdminDashboard from '../pages/admin/AdminDashboard';
 import ParticipantDashboard from '../pages/participant/ParticipantDashboard';
 import HackathonDetailPage from '../pages/participant/HackathonDetailPage';
 
-// Placeholder pages — will build these later
-const OrganizerDashboard = () => <div>Organizer Dashboard</div>;
-const JudgeDashboard = () => <div>Judge Dashboard</div>;
+// Organizer pages
+import OrganizerDashboard from '../pages/organizer/OrganizerDashboard';
+
+// Judge pages
+import JudgeDashboard from '../pages/judge/JudgeDashboard';
+
 
 const AppRouter = () => {
     const { isAuthenticated, user } = useAuth();
