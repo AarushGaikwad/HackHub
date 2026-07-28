@@ -3,7 +3,6 @@ import * as authApi from '../api/authApi';
 import { saveToken, saveUser, getToken, getUser, clearAuth } from '../utils/storage';
 import { setUnauthorizedHandler } from '../api/client';
 
-// hello
 const AuthContext = createContext(null);
  
 export function AuthProvider({ children }) {
