@@ -256,7 +256,7 @@ const ParticipantDashboard = () => {
                 {/* Header */}
                 <div style={{ marginBottom: '32px' }}>
                     <h1 style={{ fontSize: '28px', fontWeight: '800', color: 'var(--text)', letterSpacing: '-0.5px', marginBottom: '6px' }}>
-                        Participant Dashboard
+                        Your Hackathon Journey
                     </h1>
                     <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
                         Track your hackathons, teams, submissions and certificates
