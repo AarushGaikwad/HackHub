@@ -107,7 +107,7 @@ public class TeamController {
     }
 
     // Get all teams - ADMIN/ORGANIZER
-    @PreAuthorize("hasRole('ORGANIZER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ORGANIZER', 'ADMIN')")
     @GetMapping
     public ResponseEntity<ResponseStatus<List<TeamResponseDto>>> getAllTeams() {
         List<TeamResponseDto> response = teamService.getAllTeams();

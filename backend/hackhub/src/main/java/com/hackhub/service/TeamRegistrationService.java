@@ -156,8 +156,9 @@ public class TeamRegistrationService {
     // Update registration status — organizer only
     public TeamRegistrationResponseDto updateRegistrationStatus(Integer hackathonId,
                                                                 Integer teamId,
-                                                                Integer userId,
                                                                 String status) {
+
+        Integer userId = securityUtils.getCurrentUserId();
 
         // Validate registration exists
         TeamRegistration registration = teamRegistrationRepository

@@ -15,7 +15,6 @@ public class OrganizerResponseDto {
     private Integer id;
     private String name;
     private String email;
-    private String password; // TODO: remove before production
     private String organizationName;
     private String role;
     private String status;
