@@ -33,8 +33,7 @@ public class TeamRegistrationController {
     // Get registered team for hackathon
     @PreAuthorize("hasRole('ORGANIZER')")
     @GetMapping("/{hackathonId}/registered-teams")
-    public ResponseEntity<ResponseStatus<List<TeamRegistrationResponseDto>>> getRegisteredTeams(
-            @PathVariable Integer hackathonId) {
+    public ResponseEntity<ResponseStatus<List<TeamRegistrationResponseDto>>> getRegisteredTeams(@PathVariable Integer hackathonId) {
         List<TeamRegistrationResponseDto> response = teamRegistrationService.getRegisteredTeams(hackathonId);
         return ResponseEntity.status(HttpStatus.OK).body(ResponseStatus.success(response));
     }
@@ -50,19 +49,17 @@ public class TeamRegistrationController {
     // Get all hackathon a team is registered for
     @PreAuthorize("hasRole('PARTICIPANT')")
     @GetMapping("/team/{teamId}/registrations")
-    public ResponseEntity<ResponseStatus<List<TeamRegistrationResponseDto>>> getHackathonsByTeam(
-            @PathVariable Integer teamId) {
+    public ResponseEntity<ResponseStatus<List<TeamRegistrationResponseDto>>> getHackathonsByTeam(@PathVariable Integer teamId) {
         List<TeamRegistrationResponseDto> response = teamRegistrationService.getHackathonsByTeam(teamId);
         return ResponseEntity.status(HttpStatus.OK).body(ResponseStatus.success(response));
     }
 
     // Update registration status
-    @PreAuthorize("hasRole('PARTICIPANT')")
+    @PreAuthorize("hasRole('ORGANIZER')")
     @PutMapping("/{hackathonId}/register-team/{teamId}/status")
     public ResponseEntity<ResponseStatus<TeamRegistrationResponseDto>> updateRegistrationStatus(
-            @PathVariable Integer hackathonId, @PathVariable Integer teamId,
-            @RequestParam Integer userId, @RequestParam String status) {
-        TeamRegistrationResponseDto response = teamRegistrationService.updateRegistrationStatus(hackathonId, teamId, userId, status);
+            @PathVariable Integer hackathonId, @PathVariable Integer teamId, @RequestParam String status) {
+        TeamRegistrationResponseDto response = teamRegistrationService.updateRegistrationStatus(hackathonId, teamId, status);
         return ResponseEntity.status(HttpStatus.OK).body(ResponseStatus.success(response));
     }
 

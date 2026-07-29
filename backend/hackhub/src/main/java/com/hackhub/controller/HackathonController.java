@@ -85,7 +85,7 @@ public class HackathonController {
     }
 
     // Filter hackathon by status
-    @PreAuthorize("hasAnyRole('ORGANIZER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ORGANIZER', 'ADMIN', 'PARTICIPANT')")
     @GetMapping("/filter")
     public ResponseEntity<ResponseStatus<List<HackathonResponseDto>>> filterHackathonByStatus(@RequestParam String status) {
         return ResponseEntity.ok(ResponseStatus.success(hackathonService.filterHackathonByStatus(status)));

@@ -13,7 +13,7 @@ import {
 
 const TABS = ['Overview', 'My Hackathons', 'Manage', 'Judges'];
 
-// ── Shared Table ────────────────────────────────────────────────────────────
+//  Shared Table
 const Table = ({ headers, children, empty }) => (
     <div style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '16px', overflow: 'hidden' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -34,7 +34,7 @@ const Td = ({ children, muted }) => (
     <td style={{ padding: '14px 20px', fontSize: '13px', color: muted ? 'var(--text-secondary)' : 'var(--text)', borderBottom: '1px solid var(--border)', fontWeight: muted ? '400' : '500' }}>{children}</td>
 );
 
-// ── Hackathon Form Modal ─────────────────────────────────────────────────────
+//  Hackathon Form Modal
 const HackathonForm = ({ initial, organizations, onSubmit, onClose, loading }) => {
     const [form, setForm] = useState(initial || {
         title: '', description: '', rules: '',
@@ -105,7 +105,7 @@ const HackathonForm = ({ initial, organizations, onSubmit, onClose, loading }) =
     );
 };
 
-// ── Overview Tab ─────────────────────────────────────────────────────────────
+//  Overview Tab
 const OverviewTab = ({ hackathons, user }) => {
     const now = new Date();
     const active = hackathons.filter(h => new Date(h.startDate) <= now && new Date(h.endDate) >= now).length;
@@ -130,7 +130,7 @@ const OverviewTab = ({ hackathons, user }) => {
     );
 };
 
-// ── My Hackathons Tab ─────────────────────────────────────────────────────────
+// My Hackathons Tab
 const HackathonsTab = ({ hackathons, onEdit, onDelete, onAdd }) => {
     const getStatus = (h) => {
         const now = new Date();
@@ -171,7 +171,7 @@ const HackathonsTab = ({ hackathons, onEdit, onDelete, onAdd }) => {
     );
 };
 
-// ── Manage Tab ────────────────────────────────────────────────────────────────
+//  Manage Tab
 const ManageTab = ({ hackathons, user }) => {
     const [selectedId, setSelectedId] = useState('');
     const [teams, setTeams] = useState([]);
@@ -290,7 +290,7 @@ const ManageTab = ({ hackathons, user }) => {
     );
 };
 
-// ── Judges Tab ────────────────────────────────────────────────────────────────
+//  Judges Tab
 const JudgesTab = ({ hackathons, user }) => {
     const [selectedId, setSelectedId] = useState('');
     const [judges, setJudges] = useState([]);
@@ -393,7 +393,7 @@ const JudgesTab = ({ hackathons, user }) => {
     );
 };
 
-// ── Main Dashboard ────────────────────────────────────────────────────────────
+//  Main Dashboard
 const OrganizerDashboard = () => {
     const { user } = useAuth();
     const [activeTab, setActiveTab] = useState('Overview');
@@ -464,7 +464,9 @@ const OrganizerDashboard = () => {
             <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '40px 32px' }}>
 
                 <div style={{ marginBottom: '32px' }}>
-                    <h1 style={{ fontSize: '28px', fontWeight: '800', color: 'var(--text)', letterSpacing: '-0.5px', marginBottom: '6px' }}>Organizer Dashboard</h1>
+                    <h1 style={{ fontSize: '28px', fontWeight: '800', color: 'var(--text)', letterSpacing: '-0.5px', marginBottom: '6px' }}>
+                        Organizer Workspace
+                    </h1>
                     <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Create and manage your hackathons</p>
                 </div>
 

@@ -11,7 +11,7 @@ import { getAllHackathons, filterHackathons, getMyTeams, getMySubmissions, getMy
 const TABS = ['Overview', 'Hackathons', 'My Teams', 'Submissions', 'Certificates'];
 const FILTERS = ['ALL', 'ACTIVE', 'UPCOMING', 'COMPLETED'];
 
-// ── Shared table wrapper ────────────────────────────────────────────────────
+//  Shared table wrapper
 const Table = ({ headers, children, empty }) => (
     <div style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '16px', overflow: 'hidden' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -46,7 +46,7 @@ const Td = ({ children, muted }) => (
     </td>
 );
 
-// ── Hackathon Card ──────────────────────────────────────────────────────────
+//  Hackathon Card
 const HackathonCard = ({ h, onClick }) => {
     const now = new Date();
     const start = new Date(h.startDate);
@@ -71,7 +71,7 @@ const HackathonCard = ({ h, onClick }) => {
     );
 };
 
-// ── Overview Tab ────────────────────────────────────────────────────────────
+//  Overview Tab
 const OverviewTab = ({ user, stats }) => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
         <div style={{ backgroundColor: 'var(--brand-bg)', border: '1px solid var(--border)', borderRadius: '16px', padding: '28px 32px' }}>
@@ -89,7 +89,7 @@ const OverviewTab = ({ user, stats }) => (
     </div>
 );
 
-// ── Hackathons Tab ──────────────────────────────────────────────────────────
+//  Hackathons Tab
 const HackathonsTab = ({ hackathons, loading, activeFilter, onFilter, onCardClick }) => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -119,7 +119,7 @@ const HackathonsTab = ({ hackathons, loading, activeFilter, onFilter, onCardClic
     </div>
 );
 
-// ── My Teams Tab
+//  My Teams Tab
 const TeamsTab = ({ teams }) => (
     <Table headers={['Team Name', 'Leader', 'Members', 'Invite Code']} empty={!teams?.length && 'You are not part of any team yet.'}>
         {teams?.map(t => (
@@ -137,7 +137,7 @@ const TeamsTab = ({ teams }) => (
     </Table>
 );
 
-// ── Submissions Tab
+//  Submissions Tab
 const SubmissionsTab = ({ submissions }) => (
     <Table headers={['Title', 'Team', 'Hackathon', 'Type', 'Submitted']} empty={!submissions?.length && 'No submissions yet.'}>
         {submissions?.map(s => (
@@ -152,7 +152,7 @@ const SubmissionsTab = ({ submissions }) => (
     </Table>
 );
 
-// ── Certificates Tab
+//  Certificates Tab
 const CertificatesTab = ({ certs, onDownload }) => (
     <Table headers={['Hackathon', 'Type', 'Issued', 'Download']} empty={!certs?.length && 'No certificates yet.'}>
         {certs?.map(c => (
@@ -175,7 +175,7 @@ const CertificatesTab = ({ certs, onDownload }) => (
     </Table>
 );
 
-// ── Main Dashboard
+//  Main Dashboard
 const ParticipantDashboard = () => {
     const { user } = useAuth();
     const navigate = useNavigate();

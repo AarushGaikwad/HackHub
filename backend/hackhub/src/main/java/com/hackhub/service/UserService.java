@@ -107,7 +107,6 @@ public class UserService {
                 .id(savedUser.getId())
                 .name(savedUser.getName())
                 .email(savedUser.getEmail())
-                .password(savedUser.getPassword()) // TODO: remove before production
                 .collegeName(savedUser.getOrganization().getName())
                 .role(savedUser.getRole())
                 .status(savedUser.getStatus())
@@ -152,7 +151,6 @@ public class UserService {
                 .id(savedUser.getId())
                 .name(savedUser.getName())
                 .email(savedUser.getEmail())
-                .password(savedUser.getPassword()) // TODO: remove before production
                 .organizationName(savedUser.getOrganization().getName())
                 .role(savedUser.getRole())
                 .status(savedUser.getStatus())
@@ -187,7 +185,6 @@ public class UserService {
                 .id(savedUser.getId())
                 .name(savedUser.getName())
                 .email(savedUser.getEmail())
-                .password(savedUser.getPassword()) // TODO: remove before production
                 .designation(savedUser.getDesignation())
                 .role(savedUser.getRole())
                 .status(savedUser.getStatus())
@@ -288,7 +285,6 @@ public class UserService {
                         .id(user.getId())
                         .name(user.getName())
                         .email(user.getEmail())
-                        .password(user.getPassword()) // TODO: remove before production
                         .role(user.getRole())
                         .designation(user.getDesignation())
                         .status(user.getStatus())

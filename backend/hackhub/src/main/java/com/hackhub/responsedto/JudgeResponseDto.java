@@ -15,7 +15,6 @@ public class JudgeResponseDto {
     private Integer id;
     private String name;
     private String email;
-    private String password; // TODO: remove before production
     private String designation;
     private String role;
     private String status;
