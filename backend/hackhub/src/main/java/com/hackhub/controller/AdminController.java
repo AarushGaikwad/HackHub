@@ -47,7 +47,7 @@ public class AdminController {
     }
 
     // Get user by id
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PARTICIPANT', 'ORGANIZER', 'JUDGE')")
     @GetMapping("/users/{userId}")
     public ResponseEntity<ResponseStatus<UserResponseDto>> getUserById(
             @PathVariable Integer userId) {
