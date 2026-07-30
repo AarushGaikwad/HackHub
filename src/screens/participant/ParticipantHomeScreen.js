@@ -1,5 +1,3 @@
-// Temporary placeholder — replaced by the real Participant navigator/screens
-// in the next build phase. Exists only so the auth flow is testable now.
 import React from 'react';
 import { Text, StyleSheet } from 'react-native';
 import ScreenContainer from '../../components/ScreenContainer';

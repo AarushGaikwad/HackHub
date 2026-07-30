@@ -1,6 +1,3 @@
-// Single combined Login / Sign-up screen. Sign-up shows a role selector
-// (Participant / Organizer / Judge — no Admin, admin is web-only) and the
-// form fields swap to match that role's exact RequestDto.
 import React, { useState } from 'react';
 import { View, Text, Pressable, StyleSheet, Alert } from 'react-native';
 import ScreenContainer from '../../components/ScreenContainer';
