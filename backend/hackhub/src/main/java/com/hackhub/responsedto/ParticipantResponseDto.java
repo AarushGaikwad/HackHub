@@ -15,7 +15,6 @@ public class ParticipantResponseDto {
     private Integer id;
     private String name;
     private String email;
-    private String password; // TODO: remove before production
     private String collegeName;
     private String role;
     private String status;

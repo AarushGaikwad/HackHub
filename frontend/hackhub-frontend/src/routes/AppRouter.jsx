@@ -12,6 +12,9 @@ import AdminDashboard from '../pages/admin/AdminDashboard';
 // Participant pages
 import ParticipantDashboard from '../pages/participant/ParticipantDashboard';
 import HackathonDetailPage from '../pages/participant/HackathonDetailPage';
+import TeamPage from '../pages/participant/TeamPage';
+import SubmissionPage from '../pages/participant/SubmissionPage';
+import ProfilePage from '../pages/participant/ProfilePage';
 
 // Placeholder pages — will build these later
 const OrganizerDashboard = () => <div>Organizer Dashboard</div>;
@@ -60,6 +63,29 @@ const AppRouter = () => {
                     element={
                         <ProtectedRoute allowedRoles={['PARTICIPANT']}>
                             <HackathonDetailPage/>
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route 
+                    path="/participant/teams"
+                    element={
+                        <ProtectedRoute allowedRoles={['PARTICIPANT']}>
+                            <TeamPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route path="/participant/submission/:teamRegistrationId"
+                    element={
+                        <ProtectedRoute allowedRoles={['PARTICIPANT']}>
+                            <SubmissionPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route path="/profile"
+                    element={
+                        <ProtectedRoute allowedRoles={['PARTICIPANT', 'ORGANIZER', 'JUDGE', 'ADMIN']}>
+                            <ProfilePage />
                         </ProtectedRoute>
                     }
                 />
