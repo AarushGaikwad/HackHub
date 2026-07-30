@@ -2,7 +2,7 @@ import axios from 'axios';
 import Constants from 'expo-constants';
 import { getToken, clearAuth } from '../utils/storage';
  
-const API_BASE_URL = Constants.expoConfig?.extra?.apiBaseUrl || 'http://10.20.30.217:8080';
+const API_BASE_URL = Constants.expoConfig?.extra?.apiBaseUrl || 'http://192.168.0.105:8080';
  
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
