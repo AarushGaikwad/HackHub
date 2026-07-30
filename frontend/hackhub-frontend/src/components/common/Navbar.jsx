@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { LogOut, Sun, Moon, User } from 'lucide-react';
+import { LogOut, Sun, Moon, User,Users } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import api from '../../api/axiosConfig';
@@ -131,6 +131,39 @@ const Navbar = () => {
                             </span>
                         </div>
                     )}
+
+                        {user?.role === 'PARTICIPANT' && (
+                            <Link to="/participant/teams" style={{
+                                padding: '7px 14px',
+                                borderRadius: '8px',
+                                backgroundColor: 'var(--bg)',
+                                border: '1px solid var(--border)',
+                                color: 'var(--text-secondary)',
+                                textDecoration: 'none',
+                                fontSize: '13px',
+                                fontWeight: '600',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '6px',
+                            }}>
+                                <Users size={14} /> Teams
+                            </Link>
+                        )}
+                        <Link to="/profile" style={{
+                            padding: '7px 14px',
+                            borderRadius: '8px',
+                            backgroundColor: 'var(--bg)',
+                            border: '1px solid var(--border)',
+                            color: 'var(--text-secondary)',
+                            textDecoration: 'none',
+                            fontSize: '13px',
+                            fontWeight: '600',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                        }}>
+                            <User size={14} /> Profile
+                        </Link>
 
                     {/* Logout */}
                     <button onClick={handleLogout} style={{
