@@ -9,7 +9,7 @@ import { colors, spacing, typography } from '../../constants/theme';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function CreateHackathonScreen({ navigation }) {
-  const [form, setForm] = useState({ title: '', description: '', rules: '', startDate: new Date(), endDate: new Date });
+  const [form, setForm] = useState({ title: '', description: '', rules: '', startDate: new Date(), endDate: new Date() });
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -21,8 +21,8 @@ const [showEndPicker, setShowEndPicker] = useState(false);
   const validate = () => {
     const next = {};
     if (!form.title.trim()) next.title = 'Required';
-    if (!form.startDate.trim()) next.startDate = 'Required';
-    if (!form.endDate.trim()) next.endDate = 'Required';
+    if (!form.startDate) next.startDate = 'Required';
+    if (!form.endDate) next.endDate = 'Required';
     setErrors(next);
     return Object.keys(next).length === 0;
   };
