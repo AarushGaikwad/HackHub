@@ -8,15 +8,9 @@ import { colors } from '../constants/theme';
 
 import AuthStack from './AuthStack';
 
-import ParticipantHomeScreen from '../screens/participant/ParticipantHomeScreen';
-import OrganizerHomeScreen from '../screens/organizer/OrganizerHomeScreen';
-import JudgeHomeScreen from '../screens/judge/JudgeHomeScreen';
-
-const ROLE_SCREENS = {
-  [ROLES.PARTICIPANT]: ParticipantHomeScreen,
-  [ROLES.ORGANIZER]: OrganizerHomeScreen,
-  [ROLES.JUDGE]: JudgeHomeScreen,
-};
+import ParticipantNavigator from './ParticipantNavigator';
+import OrganizerNavigator from './OrganizerNavigator';
+import JudgeNavigator from './JudgeNavigator';
 
 const navTheme = {
   ...DarkTheme,
@@ -30,26 +24,24 @@ const navTheme = {
   },
 };
 
+const ROLE_SCREENS = {
+  [ROLES.PARTICIPANT]: ParticipantNavigator,
+  [ROLES.ORGANIZER]: OrganizerNavigator,
+  [ROLES.JUDGE]: JudgeNavigator,
+};
+
 export default function RootNavigator() {
   const { isAuthenticated, isBootstrapping, user } = useAuth();
 
   if (isBootstrapping) {
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: colors.bg,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-        <ActivityIndicator size="large" color={colors.primary} />
+      <View style={{ flex: 1, backgroundColor: colors.bg, alignItems: 'center', justifyContent: 'center' }}>
+        <ActivityIndicator color={colors.primary} size="large" />
       </View>
     );
   }
 
-  const RoleScreen = isAuthenticated
-    ? ROLE_SCREENS[user?.role]
-    : null;
+  const RoleScreen = isAuthenticated ? ROLE_SCREENS[user?.role] : null;
 
   return (
     <NavigationContainer theme={navTheme}>
