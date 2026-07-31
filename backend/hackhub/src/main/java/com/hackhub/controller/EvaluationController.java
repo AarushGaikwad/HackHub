@@ -54,7 +54,7 @@ public class EvaluationController {
     }
 
     // Get assigned hackathon to a judge
-    @PreAuthorize("hasRole('ORGANIZER')")
+    @PreAuthorize("hasAnyRole('ORGANIZER', 'JUDGE')")
     @GetMapping("judges/{judgeId}/hackathons")
     public ResponseEntity<ResponseStatus<List<JudgeAssignmentResponseDto>>> getJudgeHackathons(@PathVariable Integer judgeId) {
         List<JudgeAssignmentResponseDto> response = evaluationService.getJudgeHackathons(judgeId);

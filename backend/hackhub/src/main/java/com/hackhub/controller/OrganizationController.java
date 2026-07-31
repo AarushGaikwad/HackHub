@@ -33,7 +33,7 @@ public class OrganizationController {
     }
 
     // Get all organizations
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ORGANIZER')")
     @GetMapping("/organizations")
     public ResponseEntity<ResponseStatus<List<OrganizationResponseDto>>> getAllOrganizations() {
         List<OrganizationResponseDto> responseList = organizationService.getAllOrganizations();
