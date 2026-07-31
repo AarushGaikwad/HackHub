@@ -1,54 +1,77 @@
 import React, { useState } from "react";
 import { Text, StyleSheet } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
+
 import ScreenContainer from "../../components/ScreenContainer";
 import Card from "../../components/Card";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
+
 import * as organizerApi from "../../api/organizerApi";
+import { useAuth } from "../../context/AuthContext";
 import { colors, spacing, typography } from "../../constants/theme";
-import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function CreateHackathonScreen({ navigation }) {
+  const { user } = useAuth();
+
   const [form, setForm] = useState({
     title: "",
     description: "",
     rules: "",
+    maxTeamSize: "",
+    organizationId: "",
     startDate: new Date(),
     endDate: new Date(),
   });
-  const [errors, setErrors] = useState({});
-  const [apiError, setApiError] = useState(null);
+
   const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState(null);
+
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
 
   const update = (key) => (value) =>
-    setForm((prev) => ({ ...prev, [key]: value }));
-
-  const validate = () => {
-    const next = {};
-    if (!form.title.trim()) next.title = "Required";
-    if (!form.startDate) next.startDate = "Required";
-    if (!form.endDate) next.endDate = "Required";
-    setErrors(next);
-    return Object.keys(next).length === 0;
-  };
+    setForm((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
 
   const handleSubmit = async () => {
-    setApiError(null);
-    if (!validate()) return;
-    setLoading(true);
     try {
+      setLoading(true);
+      setApiError(null);
+
       const payload = {
-        ...form,
+        title: form.title,
+        description: form.description,
+        rules: form.rules,
+        maxTeamSize: Number(form.maxTeamSize),
+
+        // Logged in organizer
+        createdBy: user.userId,
+
+        // Enter organization id or fetch it from backend
+        organizationId: Number(form.organizationId),
+
         startDate: form.startDate.toISOString(),
         endDate: form.endDate.toISOString(),
       };
 
+      console.log("Payload:", payload);
+
       await organizerApi.createHackathon(payload);
+
+      alert("Hackathon Created Successfully");
+
       navigation.goBack();
     } catch (err) {
-      setApiError(err.message || "Failed to create hackathon");
+      console.log(err);
+
+      setApiError(
+        err.response?.data?.message ||
+          err.message ||
+          "Failed to create hackathon"
+      );
     } finally {
       setLoading(false);
     }
@@ -58,39 +81,44 @@ export default function CreateHackathonScreen({ navigation }) {
     <ScreenContainer>
       <Text style={styles.title}>Create Hackathon</Text>
 
-      <Card style={{ marginTop: spacing.lg }}>
+      <Card>
+
         <Input
           label="Title"
           value={form.title}
           onChangeText={update("title")}
-          error={errors.title}
         />
+
         <Input
           label="Description"
-          multiline
-          numberOfLines={4}
-          style={{
-            height: 100,
-            textAlignVertical: "top",
-            paddingTop: spacing.sm,
-          }}
           value={form.description}
           onChangeText={update("description")}
+          multiline
         />
+
         <Input
           label="Rules"
-          multiline
-          numberOfLines={4}
-          style={{
-            height: 100,
-            textAlignVertical: "top",
-            paddingTop: spacing.sm,
-          }}
           value={form.rules}
           onChangeText={update("rules")}
+          multiline
         />
+
+        <Input
+          label="Max Team Size"
+          keyboardType="numeric"
+          value={form.maxTeamSize}
+          onChangeText={update("maxTeamSize")}
+        />
+
+        <Input
+          label="Organization Id"
+          keyboardType="numeric"
+          value={form.organizationId}
+          onChangeText={update("organizationId")}
+        />
+
         <Button
-          title={`Start: ${form.startDate.toLocaleString()}`}
+          title={`Start Date : ${form.startDate.toLocaleString()}`}
           onPress={() => setShowStartPicker(true)}
         />
 
@@ -98,22 +126,18 @@ export default function CreateHackathonScreen({ navigation }) {
           <DateTimePicker
             value={form.startDate}
             mode="date"
-            display="default"
-            onChange={(event, selectedDate) => {
+            onChange={(e, date) => {
               setShowStartPicker(false);
 
-              if (selectedDate) {
-                setForm((prev) => ({
-                  ...prev,
-                  startDate: selectedDate,
-                }));
+              if (date) {
+                update("startDate")(date);
               }
             }}
           />
         )}
 
         <Button
-          title={`End: ${form.endDate.toLocaleString()}`}
+          title={`End Date : ${form.endDate.toLocaleString()}`}
           onPress={() => setShowEndPicker(true)}
         />
 
@@ -121,32 +145,41 @@ export default function CreateHackathonScreen({ navigation }) {
           <DateTimePicker
             value={form.endDate}
             mode="date"
-            display="default"
-            onChange={(event, selectedDate) => {
+            onChange={(e, date) => {
               setShowEndPicker(false);
 
-              if (selectedDate) {
-                setForm((prev) => ({
-                  ...prev,
-                  endDate: selectedDate,
-                }));
+              if (date) {
+                update("endDate")(date);
               }
             }}
           />
         )}
-        {apiError ? <Text style={styles.apiError}>{apiError}</Text> : null}
+
+        {apiError && (
+          <Text style={styles.error}>
+            {apiError}
+          </Text>
+        )}
 
         <Button
           title="Publish Hackathon"
           onPress={handleSubmit}
           loading={loading}
         />
+
       </Card>
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  title: { ...typography.h1 },
-  apiError: { color: colors.danger, fontSize: 13, marginBottom: spacing.sm },
+  title: {
+    ...typography.h1,
+    marginBottom: spacing.lg,
+  },
+
+  error: {
+    color: colors.danger,
+    marginVertical: spacing.md,
+  },
 });
