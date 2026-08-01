@@ -76,7 +76,7 @@ const OverviewTab = ({ user, stats }) => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
         <div style={{ backgroundColor: 'var(--brand-bg)', border: '1px solid var(--border)', borderRadius: '16px', padding: '28px 32px' }}>
             <h2 style={{ fontSize: '22px', fontWeight: '800', color: 'var(--text)', letterSpacing: '-0.5px', marginBottom: '6px' }}>
-                Welcome back, {user?.name?.split(' ')[0]} 👋
+                Welcome, {user?.name?.split(' ')[0]} 👋
             </h2>
             <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Here's a summary of your HackHub activity.</p>
         </div>

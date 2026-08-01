@@ -283,7 +283,7 @@ public class TeamService {
                     int memberCount = teamMemberRepository.countByTeamId(team.getId());
                     return mapToTeamResponse(team, memberCount);
                 })
-                .collect(Collectors.toList()); //TODO: shift to the admin controller later
+                .collect(Collectors.toList());
     }
 
     // Check if user is leader
