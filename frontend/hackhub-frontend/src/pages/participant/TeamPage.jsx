@@ -8,7 +8,7 @@ import { useAuth } from '../../context/AuthContext';
 import {
     getMyTeams, createTeam, joinTeam, leaveTeam, deleteTeam,
     getTeamMembers, getTeamRegistrations, registerTeamForHackathon,
-    withdrawTeam, getAllHackathons
+    withdrawTeam, getAllHackathons, transferLeader
 } from '../../api/participantApi';
 
 //  Small reusable pieces
@@ -134,6 +134,51 @@ const RegisterModal = ({ teamId, hackathons, registrations, onSubmit, onWithdraw
     );
 };
 
+// Transfer Leadership modal
+const TransferLeaderModal = ({ team, members, onSubmit, onClose, loading }) => {
+    const [selectedId, setSelectedId] = useState('');
+    const otherMembers = members.filter(m => !m.leader);
+
+    return (
+        <Modal title="Transfer Leadership" onClose={onClose}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+                    Select a member to become the new team leader. After transferring, you can leave the team.
+                </p>
+                {otherMembers.length === 0 ? (
+                    <div style={{ backgroundColor: 'var(--warning-bg)', color: 'var(--warning-text)', borderRadius: '10px', padding: '12px 14px', fontSize: '13px', fontWeight: '500' }}>
+                        ⚠️ No other members to transfer leadership to. Add members first.
+                    </div>
+                ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {otherMembers.map(m => (
+                            <button key={m.userId} onClick={() => setSelectedId(m.userId)}
+                                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', backgroundColor: selectedId === m.userId ? 'var(--brand-bg)' : 'var(--bg)', border: `1.5px solid ${selectedId === m.userId ? 'var(--brand)' : 'var(--border)'}`, borderRadius: '10px', cursor: 'pointer', width: '100%', transition: 'all 0.15s' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: 'var(--brand-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        <span style={{ fontSize: '13px', fontWeight: '700', color: 'var(--brand)' }}>{m.name?.charAt(0)}</span>
+                                    </div>
+                                    <div style={{ textAlign: 'left' }}>
+                                        <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text)' }}>{m.name}</div>
+                                        <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{m.email}</div>
+                                    </div>
+                                </div>
+                                {selectedId === m.userId && <Check size={15} color="var(--brand)" />}
+                            </button>
+                        ))}
+                    </div>
+                )}
+                <div style={{ display: 'flex', gap: '10px', marginTop: '4px' }}>
+                    <Btn variant="secondary" onClick={onClose} size="md" fullWidth>Cancel</Btn>
+                    <Btn onClick={() => onSubmit(selectedId)} disabled={!selectedId || loading || otherMembers.length === 0} size="md" fullWidth>
+                        <Crown size={13} /> {loading ? 'Transferring...' : 'Transfer Leadership'}
+                    </Btn>
+                </div>
+            </div>
+        </Modal>
+    );
+};
+
 //  Modal wrapper
 const Modal = ({ title, onClose, children }) => (
     <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '20px' }}>
@@ -145,20 +190,23 @@ const Modal = ({ title, onClose, children }) => (
 );
 
 //  Team Card
-const TeamCard = ({ team, userId, onLeave, onDelete, onRegister, onGoToSubmission, onCopy, copied }) => {
+const TeamCard = ({ team, userId, onLeave, onDelete, onRegister, onGoToSubmission, onCopy, copied, onTransfer }) => {
     const [members, setMembers] = useState([]);
     const [registrations, setRegistrations] = useState([]);
     const [expanded, setExpanded] = useState(false);
     const isLeader = team.leaderName === team.leaderName; // will refine with actual check
 
     useEffect(() => {
-        if (expanded) {
-            Promise.all([
-                getTeamMembers(team.id).then(r => setMembers(r.data.data || [])),
-                getTeamRegistrations(team.id).then(r => setRegistrations(r.data.data || [])),
-            ]).catch(() => {});
-        }
-    }, [expanded, team.id]);
+    if (expanded) {
+        Promise.all([
+            getTeamMembers(team.id).then(r => {
+                console.log("Members:", r.data.data);
+                setMembers(r.data.data || []);
+            }),
+            getTeamRegistrations(team.id).then(r => setRegistrations(r.data.data || [])),
+        ]).catch(() => {});
+    }
+}, [expanded, team.id]);
 
     return (
         <Card>
@@ -197,7 +245,7 @@ const TeamCard = ({ team, userId, onLeave, onDelete, onRegister, onGoToSubmissio
                                 {members.map(m => (
                                     <div key={m.userId} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                         <span style={{ fontSize: '13px', color: 'var(--text)', fontWeight: '500' }}>{m.name}</span>
-                                        {m.isLeader && <Crown size={13} color="var(--warning-text)" />}
+                                        {m.leader && <Crown size={13} color="var(--warning-text)" />}
                                     </div>
                                 ))}
                             </div>
@@ -231,6 +279,14 @@ const TeamCard = ({ team, userId, onLeave, onDelete, onRegister, onGoToSubmissio
                 <Btn variant="ghost" size="sm" onClick={() => onRegister(team.id, registrations)}>
                     <Trophy size={12} /> Register for Hackathon
                 </Btn>
+
+                {/* Transfer Leadership — only show if user is leader */}
+                {members.some(m => m.userId === userId && m.leader) && (
+                    <Btn variant="secondary" size="sm" onClick={() => onTransfer(team.id, members)}>
+                        <Crown size={12} /> Transfer Leadership
+                    </Btn>
+                )}
+
                 <Btn variant="danger" size="sm" onClick={() => onLeave(team.id)}>
                     <LogOut size={12} /> Leave
                 </Btn>
@@ -338,6 +394,18 @@ const TeamPage = () => {
         } catch (e) { notify(e.response?.data?.message || 'Failed to withdraw.', true); }
     };
 
+    const handleTransfer = async (newLeaderId) => {
+        setActionLoading(true);
+        try {
+            await transferLeader(modal.teamId, newLeaderId);
+            await load();
+            setModal(null);
+            notify('Leadership transferred successfully!');
+        } catch (e) {
+            notify(e.response?.data?.message || 'Failed to transfer leadership.', true);
+        } finally { setActionLoading(false); }
+    };
+
     const handleCopy = (code) => {
         navigator.clipboard.writeText(code);
         setCopied(code);
@@ -389,7 +457,8 @@ const TeamPage = () => {
                                 onLeave={handleLeave} onDelete={handleDelete}
                                 onRegister={(teamId, regs) => setModal({ type: 'register', teamId, registrations: regs })}
                                 onGoToSubmission={(regId) => navigate(`/participant/submission/${regId}`)}
-                                onCopy={handleCopy} copied={copied} />
+                                onCopy={handleCopy} copied={copied}
+                                onTransfer={(teamId, members) => setModal({type: 'transfer', teamId, members})} />
                         ))}
                     </div>
                 )}
@@ -402,6 +471,15 @@ const TeamPage = () => {
                 <RegisterModal teamId={modal.teamId} hackathons={hackathons} registrations={modal.registrations}
                     onSubmit={handleRegister} onWithdraw={handleWithdraw}
                     onClose={() => setModal(null)} loading={actionLoading} />
+            )}
+            {modal?.type === 'transfer' && (
+                <TransferLeaderModal
+                    team={modal}
+                    members={modal.members}
+                    onSubmit={handleTransfer}
+                    onClose={() => setModal(null)}
+                    loading={actionLoading}
+                />
             )}
         </div>
     );
