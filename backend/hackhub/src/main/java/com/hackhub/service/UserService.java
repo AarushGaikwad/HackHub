@@ -53,9 +53,10 @@ public class UserService {
 
 
         // Check if organizer is approved or not
-        if ("ORGANIZER".equalsIgnoreCase(user.getRole()) && "PENDING".equalsIgnoreCase(user.getStatus())){
+        if (("ORGANIZER".equalsIgnoreCase(user.getRole()) || "JUDGE".equalsIgnoreCase(user.getRole()))
+                        && "PENDING".equalsIgnoreCase(user.getStatus()))
             throw new RuntimeException("Your account is not approved yet, please wait for the admin approval");
-        }
+
 
         // Generate JWT token
         String token = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getRole());
@@ -174,7 +175,7 @@ public class UserService {
                 .designation(request.getDesignation())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role("JUDGE")
-                .status("APPROVED")
+                .status("PENDING")
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -208,17 +209,17 @@ public class UserService {
                 .build();
     }
 
-    // Approve organizer
-    public UserResponseDto approveOrganizer(Integer userId) {
+    // Approve user
+    public UserResponseDto approveUser(Integer userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException(
                         "User not found with id: " + userId));
 
-        if (!"ORGANIZER".equalsIgnoreCase(user.getRole()))
-            throw new RuntimeException("Only ORGANIZER status can be approved");
+        if (!"ORGANIZER".equalsIgnoreCase(user.getRole()) && !"JUDGE".equalsIgnoreCase(user.getRole()))
+            throw new RuntimeException("Only ORGANIZER and JUDGE status can be approved");
 
         if ("APPROVED".equalsIgnoreCase(user.getStatus()))
-            throw new RuntimeException("Organizer is already approved");
+            throw new RuntimeException("User is already approved");
 
         user.setStatus("APPROVED");
         User saved = userRepository.save(user);
@@ -234,17 +235,17 @@ public class UserService {
                 .build();
     }
 
-    // Reject organizer
-    public UserResponseDto rejectOrganizer(Integer userId) {
+    // Reject user
+    public UserResponseDto rejectUser(Integer userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException(
                         "User not found with id: " + userId));
 
-        if (!"ORGANIZER".equalsIgnoreCase(user.getRole()))
-            throw new RuntimeException("Only ORGANIZER status can be rejected");
+        if (!"ORGANIZER".equalsIgnoreCase(user.getRole()) && !"JUDGE".equalsIgnoreCase(user.getRole()))
+            throw new RuntimeException("Only ORGANIZER and JUDGE status can be rejected");
 
         if ("REJECTED".equalsIgnoreCase(user.getStatus()))
-            throw new RuntimeException("Organizer is already rejected");
+            throw new RuntimeException("User is already rejected");
 
         user.setStatus("REJECTED");
         User saved = userRepository.save(user);

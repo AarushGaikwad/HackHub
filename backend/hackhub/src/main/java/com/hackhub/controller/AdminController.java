@@ -69,7 +69,7 @@ public class AdminController {
     @PutMapping("/users/{userId}/approve")
     public ResponseEntity<ResponseStatus<UserResponseDto>> approveOrganizer(
             @PathVariable Integer userId) {
-        UserResponseDto response = userService.approveOrganizer(userId);
+        UserResponseDto response = userService.approveUser(userId);
         return ResponseEntity.ok(ResponseStatus.success(response));
     }
 
@@ -78,7 +78,7 @@ public class AdminController {
     @PutMapping("/users/{userId}/reject")
     public ResponseEntity<ResponseStatus<UserResponseDto>> rejectOrganizer(
             @PathVariable Integer userId) {
-        UserResponseDto response = userService.rejectOrganizer(userId);
+        UserResponseDto response = userService.rejectUser(userId);
         return ResponseEntity.ok(ResponseStatus.success(response));
     }
 

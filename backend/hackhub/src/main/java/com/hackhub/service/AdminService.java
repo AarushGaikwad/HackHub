@@ -44,6 +44,13 @@ public class AdminService {
                         && "PENDING".equalsIgnoreCase(u.getStatus()))
                 .count();
 
+        long totalJudges = userRepository.findByRole("JUDGE").size();
+        long pendingJudges = userRepository.findAll()
+                .stream()
+                .filter(u -> "JUDGE".equalsIgnoreCase(u.getRole())
+                        && "PENDING".equalsIgnoreCase(u.getStatus()))
+                .count();
+
         List<Hackathon> allHackathons = hackathonRepository.findAll();
         long totalHackathons = allHackathons.size();
         long activeHackathons = allHackathons.stream()
@@ -64,6 +71,8 @@ public class AdminService {
                 .totalUsers(totalUsers)
                 .totalOrganizers(totalOrganizers)
                 .pendingOrganizers(pendingOrganizers)
+                .totalJudges(totalJudges)
+                .pendingJudges(pendingJudges)
                 .totalHackathons(totalHackathons)
                 .activeHackathons(activeHackathons)
                 .upcomingHackathons(upcomingHackathons)

@@ -5,8 +5,8 @@ import StatusBadge from '../../components/common/StatusBadge';
 import StatCard from '../../components/common/StatCard';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import {
-    getOverviewStats, getAllUsers, approveOrganizer,
-    rejectOrganizer, getAllHackathons, deleteHackathon,
+    getOverviewStats, getAllUsers, approveUser,
+    rejectUser, getAllHackathons, deleteHackathon,
     getAllCertificates, getAllOrganizations
 } from '../../api/adminApi';
 
@@ -64,7 +64,7 @@ const Td = ({ children, muted }) => (
     </td>
 );
 
-// ── Overview Tab ─────────────────────────────────────────────────────────────
+//  Overview Tab
 const OverviewTab = ({ stats }) => {
     if (!stats) return <LoadingSpinner />;
     const cards = [
@@ -73,6 +73,8 @@ const OverviewTab = ({ stats }) => {
         { label: 'Active Hackathons', value: stats.activeHackathons, icon: RefreshCw, color: '#15803D' },
         { label: 'Upcoming Hackathons', value: stats.upcomingHackathons, icon: Trophy, color: '#D97706' },
         { label: 'Pending Organizers', value: stats.pendingOrganizers, icon: Users, color: '#DC2626' },
+        { label: 'Pending Organizers', value: stats.pendingOrganizers, icon: Users, color: '#DC2626' },
+        { label: 'Pending Judges', value: stats.pendingJudges, icon: Users, color: '#DC2626' },
         { label: 'Total Teams', value: stats.totalTeams, icon: Users, color: '#7C3AED' },
         { label: 'Certificates Issued', value: stats.totalCertificatesIssued, icon: Award, color: '#0891B2' },
         { label: 'Total Organizers', value: stats.totalOrganizers, icon: Building, color: '#D97706' },
@@ -89,7 +91,7 @@ const OverviewTab = ({ stats }) => {
     );
 };
 
-// ── Users Tab ─────────────────────────────────────────────────────────────────
+//  Users Tab
 const UsersTab = ({ users, onApprove, onReject }) => (
     <Table
         headers={['Name', 'Email', 'Role', 'Status', 'Actions']}
@@ -113,7 +115,7 @@ const UsersTab = ({ users, onApprove, onReject }) => (
                 </Td>
                 <Td><StatusBadge status={u.status} /></Td>
                 <td style={{ padding: '14px 20px', borderBottom: '1px solid var(--border)' }}>
-                    {u.role === 'ORGANIZER' && u.status === 'PENDING' && (
+                    {(u.role === 'ORGANIZER' || u.role === 'JUDGE') && u.status === 'PENDING' && (
                         <div style={{ display: 'flex', gap: '8px' }}>
                             <button onClick={() => onApprove(u.id)} style={{
                                 display: 'flex', alignItems: 'center', gap: '4px',
@@ -133,7 +135,7 @@ const UsersTab = ({ users, onApprove, onReject }) => (
                             </button>
                         </div>
                     )}
-                    {!(u.role === 'ORGANIZER' && u.status === 'PENDING') && (
+                    {!((u.role === 'ORGANIZER' || u.role === 'JUDGE' )&& u.status === 'PENDING') && (
                         <span style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>—</span>
                     )}
                 </td>
@@ -142,7 +144,7 @@ const UsersTab = ({ users, onApprove, onReject }) => (
     </Table>
 );
 
-// ── Hackathons Tab ────────────────────────────────────────────────────────────
+//  Hackathons Tab
 const HackathonsTab = ({ hackathons, onDelete }) => (
     <Table
         headers={['Title', 'Organization', 'Organizer', 'Start', 'End', 'Actions']}
@@ -172,7 +174,7 @@ const HackathonsTab = ({ hackathons, onDelete }) => (
     </Table>
 );
 
-// ── Organizations Tab ─────────────────────────────────────────────────────────
+//  Organizations Tab
 const OrgsTab = ({ orgs }) => (
     <Table
         headers={['ID', 'Name', 'Type']}
@@ -196,7 +198,7 @@ const OrgsTab = ({ orgs }) => (
     </Table>
 );
 
-// ── Certificates Tab ──────────────────────────────────────────────────────────
+//  Certificates Tab
 const CertificatesTab = ({ certs }) => (
     <Table
         headers={['ID', 'Participant', 'Hackathon', 'Type', 'Issued At']}
@@ -216,7 +218,7 @@ const CertificatesTab = ({ certs }) => (
     </Table>
 );
 
-// ── Main Dashboard ────────────────────────────────────────────────────────────
+//  Main Dashboard
 const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('Overview');
     const [stats, setStats] = useState(null);
@@ -263,7 +265,7 @@ const AdminDashboard = () => {
                 u.id === userId ? { ...u, status: 'APPROVED' } : u
             ));
         } catch {
-            setError('Failed to approve organizer');
+            setError('Failed to approve user');
         }
     };
 
@@ -274,7 +276,7 @@ const AdminDashboard = () => {
                 u.id === userId ? { ...u, status: 'REJECTED' } : u
             ));
         } catch {
-            setError('Failed to reject organizer');
+            setError('Failed to reject user');
         }
     };
 

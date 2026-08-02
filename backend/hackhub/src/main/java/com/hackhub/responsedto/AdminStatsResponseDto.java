@@ -14,6 +14,8 @@ public class AdminStatsResponseDto {
     private Long totalUsers;
     private Long totalOrganizers;
     private Long pendingOrganizers;
+    private Long totalJudges;
+    private Long pendingJudges;
     private Long totalHackathons;
     private Long activeHackathons;
     private Long upcomingHackathons;
