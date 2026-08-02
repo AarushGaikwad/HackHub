@@ -6,9 +6,9 @@ export const getAllUsers = () => api.get('/admin/users');
 
 export const getUsersByRole = (role) => api.get(`/admin/users/role/${role}`);
 
-export const approveOrganizer = (userId) => api.put(`/admin/users/${userId}/approve`);
+export const approveUser = (userId) => api.put(`/admin/users/${userId}/approve`);
 
-export const rejectOrganizer = (userId) => api.put(`/admin/users/${userId}/reject`);
+export const rejectUser = (userId) => api.put(`/admin/users/${userId}/reject`);
 
 export const getAllHackathons = () => api.get('/admin/hackathons');
 
