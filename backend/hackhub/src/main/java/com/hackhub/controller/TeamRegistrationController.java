@@ -31,7 +31,7 @@ public class TeamRegistrationController {
     }
 
     // Get registered team for hackathon
-    @PreAuthorize("hasRole('ORGANIZER')")
+    @PreAuthorize("hasAnyRole('ORGANIZER' , 'PARTICIPANT')")
     @GetMapping("/{hackathonId}/registered-teams")
     public ResponseEntity<ResponseStatus<List<TeamRegistrationResponseDto>>> getRegisteredTeams(@PathVariable Integer hackathonId) {
         List<TeamRegistrationResponseDto> response = teamRegistrationService.getRegisteredTeams(hackathonId);

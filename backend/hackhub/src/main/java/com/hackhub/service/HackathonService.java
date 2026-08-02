@@ -11,11 +11,10 @@ import com.hackhub.responsedto.HackathonResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.*;
-import lombok.*;
 
 @Service
 public class HackathonService {
@@ -166,6 +165,12 @@ public class HackathonService {
         Hackathon hackathon = hackathonRepository.findById(id)
                 .orElseThrow(() ->
                         new RuntimeException("Hackathon not found with id : " + id));
+
+        LocalDateTime today = LocalDateTime.now();
+
+        if (!today.isAfter(hackathon.getEndDate())) {
+            throw new RuntimeException("Only completed hackathons can be deleted");
+        }
 
         hackathonRepository.delete(hackathon);
     }

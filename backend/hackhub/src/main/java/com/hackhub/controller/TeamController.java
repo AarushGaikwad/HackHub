@@ -69,7 +69,7 @@ public class TeamController {
     // Join team
     @PreAuthorize("hasRole('PARTICIPANT')")
     @PostMapping("/join")
-    public ResponseEntity<ResponseStatus<TeamResponseDto>> joinTeam(@RequestParam String code, @RequestParam Integer userId) {
+    public ResponseEntity<ResponseStatus<TeamResponseDto>> joinTeam(@RequestParam String code) {
         TeamResponseDto response = teamService.joinTeam(code);
         return ResponseEntity.status(HttpStatus.OK).body(ResponseStatus.success(response));
     }
@@ -106,7 +106,7 @@ public class TeamController {
         return ResponseEntity.status(HttpStatus.OK).body(ResponseStatus.success(response));
     }
 
-    // Get all teams - ADMIN/ORGANIZER
+    // Get all teams
     @PreAuthorize("hasAnyRole('ORGANIZER', 'ADMIN')")
     @GetMapping
     public ResponseEntity<ResponseStatus<List<TeamResponseDto>>> getAllTeams() {
