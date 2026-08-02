@@ -107,16 +107,6 @@ const ProfilePage = () => {
                                 </div>
                             </div>
                         )}
-
-                        {/* Edit profile coming soon */}
-                        <div style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '14px', padding: '20px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
-                            <div>
-                                <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text)', marginBottom: '3px' }}>Edit Profile</div>
-                                <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Update your name, password and other details.</p>
-                            </div>
-                            <span style={{ backgroundColor: 'var(--brand-bg)', color: 'var(--brand)', padding: '5px 12px', borderRadius: '100px', fontSize: '11px', fontWeight: '700' }}>Coming soon</span>
-                        </div>
-
                     </div>
                 )}
             </div>
