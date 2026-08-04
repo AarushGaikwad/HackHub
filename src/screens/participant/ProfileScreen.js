@@ -4,40 +4,49 @@ import ScreenContainer from '../../components/ScreenContainer';
 import Card from '../../components/Card';
 import Badge from '../../components/Badge';
 import Button from '../../components/Button';
+import ThemeToggle from '../../components/ThemeToggle';
 import { useAuth } from '../../context/AuthContext';
-import { colors, spacing, typography } from '../../constants/theme';
+import { useTheme } from '../../context/ThemeContext';
+import { spacing } from '../../constants/theme';
 
 export default function ProfileScreen() {
   const { user, logout } = useAuth();
+  const { colors, typography } = useTheme();
+
   return (
     <ScreenContainer>
-      <Text style={styles.title}>Profile</Text>
+      <Text style={typography.h1}>Profile</Text>
+
       <Card style={{ marginTop: spacing.lg }}>
         <View style={styles.headerRow}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>{(user?.name || '?').charAt(0).toUpperCase()}</Text>
+          <View style={[styles.avatar, { backgroundColor: colors.primaryMuted }]}>
+            <Text style={[styles.avatarText, { color: colors.primary }]}>
+              {(user?.name || '?').charAt(0).toUpperCase()}
+            </Text>
           </View>
           <View style={{ flex: 1, marginLeft: spacing.md }}>
-            <Text style={styles.name}>{user?.name}</Text>
+            <Text style={[typography.h3, { marginBottom: spacing.xs }]}>{user?.name}</Text>
             <Badge label={user?.role} />
           </View>
         </View>
-        <View style={styles.divider} />
-        <Text style={styles.label}>Email</Text>
-        <Text style={styles.value}>{user?.email}</Text>
+        <View style={[styles.divider, { backgroundColor: colors.border }]} />
+        <Text style={typography.caption}>Email</Text>
+        <Text style={[typography.body, { marginTop: 2 }]}>{user?.email}</Text>
       </Card>
+
+      <Card style={{ marginTop: spacing.lg, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Text style={typography.body}>Appearance</Text>
+        <ThemeToggle />
+      </Card>
+
       <Button title="Log Out" variant="danger" onPress={logout} style={{ marginTop: spacing.xl }} />
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  title: { ...typography.h1 },
   headerRow: { flexDirection: 'row', alignItems: 'center' },
-  avatar: { width: 56, height: 56, borderRadius: 28, backgroundColor: colors.primaryMuted, alignItems: 'center', justifyContent: 'center' },
-  avatarText: { color: colors.primary, fontSize: 22, fontWeight: '700' },
-  name: { ...typography.h3, marginBottom: spacing.xs },
-  divider: { height: 1, backgroundColor: colors.border, marginVertical: spacing.md },
-  label: { ...typography.caption },
-  value: { ...typography.body, marginTop: 2 },
+  avatar: { width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center' },
+  avatarText: { fontSize: 22, fontWeight: '700' },
+  divider: { height: 1, marginVertical: spacing.md },
 });

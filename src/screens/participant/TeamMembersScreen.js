@@ -36,7 +36,7 @@ export default function TeamMembersScreen({ route }) {
     <ScreenContainer>
       <Text style={styles.title}>Team Members</Text>
       {members.map((member) => (
-        <Card key={member.id} style={{ marginBottom: spacing.md }}>
+        <Card key={member.id ?? member.userId} style={{ marginBottom: spacing.md }}>
           <View style={styles.row}>
             <Text style={styles.name}>{member.name}</Text>
             {member.isLeader ? <Badge label="LEADER" /> : null}
