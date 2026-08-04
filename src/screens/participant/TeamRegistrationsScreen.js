@@ -44,7 +44,7 @@ export default function TeamRegistrationsScreen({ route, navigation }) {
       ) : (
         registrations.map((reg) => (
           <Pressable
-            key={reg.id}
+            key={reg.id ?? reg.hackathonId}
             onPress={() =>
               navigation.navigate('TeamSubmissions', {
                 teamRegistrationId: reg.id,

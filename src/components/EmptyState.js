@@ -1,18 +1,49 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { spacing, typography } from '../constants/theme';
 
-export default function EmptyState({ title = 'Nothing here yet', subtitle }) {
+import { spacing } from '../constants/theme';
+import { useTheme } from '../context/ThemeContext';
+
+export default function EmptyState({
+  title = 'Nothing here yet',
+  subtitle,
+}) {
+  const { typography } = useTheme();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{title}</Text>
-      {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
+      <Text
+        style={[
+          typography.h3,
+          {
+            textAlign: 'center',
+          },
+        ]}
+      >
+        {title}
+      </Text>
+
+      {subtitle ? (
+        <Text
+          style={[
+            typography.bodySecondary,
+            {
+              textAlign: 'center',
+              marginTop: spacing.xs,
+            },
+          ]}
+        >
+          {subtitle}
+        </Text>
+      ) : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { alignItems: 'center', paddingVertical: spacing.xxl, paddingHorizontal: spacing.lg },
-  title: { ...typography.h3, textAlign: 'center' },
-  subtitle: { ...typography.bodySecondary, textAlign: 'center', marginTop: spacing.xs },
+  container: {
+    alignItems: 'center',
+    paddingVertical: spacing.xxl,
+    paddingHorizontal: spacing.lg,
+  },
 });

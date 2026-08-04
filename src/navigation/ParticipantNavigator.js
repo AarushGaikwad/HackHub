@@ -1,9 +1,10 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Compass, Users, Award, User as UserIcon } from 'lucide-react-native';
+import { Home, Compass, Users, Award, User as UserIcon } from 'lucide-react-native';
 import { colors } from '../constants/theme';
 
+import ParticipantHomeScreen from '../screens/participant/ParticipantHomeScreen';
 import BrowseHackathonsScreen from '../screens/participant/BrowseHackathonsScreen';
 import HackathonDetailScreen from '../screens/participant/HackathonDetailScreen';
 import MyTeamScreen from '../screens/participant/MyTeamScreen';
@@ -26,6 +27,14 @@ const stackScreenOptions = {
   headerShadowVisible: false,
   contentStyle: { backgroundColor: colors.bg },
 };
+
+function HomeStack() {
+  return (
+    <Stack.Navigator screenOptions={stackScreenOptions}>
+      <Stack.Screen name="ParticipantHome" component={ParticipantHomeScreen} options={{ title: 'Home' }} />
+    </Stack.Navigator>
+  );
+}
 
 function BrowseStack() {
   return (
@@ -62,6 +71,7 @@ export default function ParticipantNavigator() {
         tabBarInactiveTintColor: colors.textMuted,
       }}
     >
+      <Tab.Screen name="Home" component={HomeStack} options={{ tabBarIcon: ({ color, size }) => <Home color={color} size={size} /> }} />
       <Tab.Screen name="Browse" component={BrowseStack} options={{ tabBarIcon: ({ color, size }) => <Compass color={color} size={size} /> }} />
       <Tab.Screen name="MyTeam" component={MyTeamStack} options={{ tabBarLabel: 'My Team', tabBarIcon: ({ color, size }) => <Users color={color} size={size} /> }} />
       <Tab.Screen name="Certificates" component={CertificatesScreen} options={{ tabBarIcon: ({ color, size }) => <Award color={color} size={size} /> }} />

@@ -115,7 +115,7 @@ export default function ManageHackathonScreen({ route, navigation }) {
           <Text style={styles.body}>No teams registered yet.</Text>
         ) : (
           registeredTeams.map((reg) => (
-            <View key={reg.id} style={styles.teamRow}>
+            <View key={reg.id ?? reg.teamId} style={styles.teamRow}>
               <View style={{ flex: 1 }}>
                 <Text style={styles.body}>{reg.teamName || reg.team?.name}</Text>
                 <Badge label={reg.status} />
@@ -145,7 +145,7 @@ export default function ManageHackathonScreen({ route, navigation }) {
       <Card style={{ marginTop: spacing.lg }}>
         <Text style={styles.sectionTitle}>Assigned Judges ({judges.length})</Text>
         {judges.map((j) => (
-          <View key={j.id} style={styles.teamRow}>
+          <View key={j.id ?? j.judgeId} style={styles.teamRow}>
             <Text style={styles.body}>{j.judgeName || `Judge #${j.judgeId}`}</Text>
             <Button title="Remove" variant="danger" onPress={() => handleRemoveJudge(j.judgeId)} />
           </View>
