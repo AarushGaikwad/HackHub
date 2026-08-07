@@ -177,14 +177,13 @@ const HackathonsTab = ({ hackathons, onDelete }) => (
 //  Organizations Tab
 const OrgsTab = ({ orgs }) => (
     <Table
-        headers={['ID', 'Name', 'Type']}
+        headers={['Name', 'Type']}
         empty={!orgs?.length && 'No organizations found'}
     >
         {orgs?.map(o => (
             <tr key={o.id}
                 onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--bg)'}
                 onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}>
-                <Td muted>#{o.id}</Td>
                 <Td>{o.name}</Td>
                 <Td>
                     <span style={{
@@ -201,14 +200,13 @@ const OrgsTab = ({ orgs }) => (
 //  Certificates Tab
 const CertificatesTab = ({ certs }) => (
     <Table
-        headers={['ID', 'Participant', 'Hackathon', 'Type', 'Issued At']}
+        headers={['Participant', 'Hackathon', 'Type', 'Issued At']}
         empty={!certs?.length && 'No certificates found'}
     >
         {certs?.map(c => (
             <tr key={c.id}
                 onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--bg)'}
                 onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}>
-                <Td muted>#{c.id}</Td>
                 <Td>{c.participantName}</Td>
                 <Td muted>{c.hackathonTitle}</Td>
                 <Td><StatusBadge status={c.type} /></Td>
@@ -260,7 +258,7 @@ const AdminDashboard = () => {
 
     const handleApprove = async (userId) => {
         try {
-            await approveOrganizer(userId);
+            await approveUser(userId);
             setUsers(prev => prev.map(u =>
                 u.id === userId ? { ...u, status: 'APPROVED' } : u
             ));
@@ -271,7 +269,7 @@ const AdminDashboard = () => {
 
     const handleReject = async (userId) => {
         try {
-            await rejectOrganizer(userId);
+            await rejectUser(userId);
             setUsers(prev => prev.map(u =>
                 u.id === userId ? { ...u, status: 'REJECTED' } : u
             ));
