@@ -4,6 +4,7 @@ import { ChevronRight, Clock } from 'lucide-react-native';
 import Card from './Card';
 import Badge from './Badge';
 import { getHackathonTiming } from '../utils/dateUtils';
+import { getStatusLabel } from '../constants/statusLabels';
 import { colors, spacing, typography } from '../constants/theme';
 
 export default function HackathonCard({ hackathon, onPress }) {
@@ -14,7 +15,7 @@ export default function HackathonCard({ hackathon, onPress }) {
       <Card style={styles.card}>
         <View style={styles.headerRow}>
           <Text style={styles.title} numberOfLines={1}>{title}</Text>
-          <Badge label={status} />
+          <Badge label={status} displayLabel={getStatusLabel(status)} />
         </View>
         {organizationName ? <Text style={styles.org}>{organizationName}</Text> : null}
         {(startDate || endDate) && <Text style={styles.dates}>{startDate} → {endDate}</Text>}

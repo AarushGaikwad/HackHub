@@ -11,6 +11,7 @@ import * as commonApi from '../../api/commonApi';
 import * as participantApi from '../../api/participantApi';
 import { useAuth } from '../../context/AuthContext';
 import { colors, radius, spacing, typography } from '../../constants/theme';
+import { getStatusLabel } from '../../constants/statusLabels';
 
 export default function HackathonDetailScreen({ route, navigation }) {
   const { hackathonId } = route.params;
@@ -94,7 +95,7 @@ export default function HackathonDetailScreen({ route, navigation }) {
     <ScreenContainer>
       <View style={styles.headerRow}>
         <Text style={styles.title}>{hackathon.title}</Text>
-        <Badge label={hackathon.status} />
+        <Badge label={hackathon.status} displayLabel={getStatusLabel(hackathon.status)} />
       </View>
       {hackathon.organizationName ? <Text style={styles.org}>Hosted by {hackathon.organizationName}</Text> : null}
       <Text style={styles.dates}>{hackathon.startDate} → {hackathon.endDate}</Text>

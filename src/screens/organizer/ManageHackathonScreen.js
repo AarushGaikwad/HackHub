@@ -4,12 +4,13 @@ import ScreenContainer from '../../components/ScreenContainer';
 import Card from '../../components/Card';
 import Badge from '../../components/Badge';
 import Button from '../../components/Button';
-import Input from '../../components/Input';
+import SelectField from '../../components/SelectField';
 import LoadingState from '../../components/LoadingState';
 import ErrorState from '../../components/ErrorState';
 import * as organizerApi from '../../api/organizerApi';
 import { useAuth } from '../../context/AuthContext';
 import { colors, spacing, typography } from '../../constants/theme';
+import { getStatusLabel } from '../../constants/statusLabels';
 
 export default function ManageHackathonScreen({ route, navigation }) {
   const { hackathonId } = route.params;
@@ -18,25 +19,33 @@ export default function ManageHackathonScreen({ route, navigation }) {
   const [hackathon, setHackathon] = useState(null);
   const [registeredTeams, setRegisteredTeams] = useState([]);
   const [judges, setJudges] = useState([]);
+  const [allJudges, setAllJudges] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [judgeIdInput, setJudgeIdInput] = useState('');
+  const [selectedJudgeId, setSelectedJudgeId] = useState(null);
   const [assigningJudge, setAssigningJudge] = useState(false);
   const [actingTeamId, setActingTeamId] = useState(null);
   const [generatingCerts, setGeneratingCerts] = useState(false);
+  const [deletingHackathon, setDeletingHackathon] = useState(false);
 
   const load = useCallback(async () => {
     setError(null);
     try {
-      const [hackathonData, teams, judgeList] = await Promise.all([
+      const [hackathonData, teams, judgeList, judgesDirectory] = await Promise.all([
         organizerApi.getHackathonById(hackathonId),
         organizerApi.getRegisteredTeams(hackathonId),
         organizerApi.getAssignedJudges(hackathonId),
+        organizerApi.getJudges().catch(() => []), // don't block the screen if this fails
       ]);
       setHackathon(hackathonData);
       setRegisteredTeams(teams || []);
-      setJudges(judgeList || []);
+      // JudgeAssignmentResponseDto.status can be INACTIVE for removed
+      // assignments (removeJudge soft-deletes rather than deleting the
+      // row) — filter defensively in case the backend doesn't already
+      // exclude inactive ones from this endpoint.
+      setJudges((judgeList || []).filter((j) => (j.status || 'ACTIVE').toUpperCase() !== 'INACTIVE'));
+      setAllJudges(judgesDirectory || []);
     } catch (err) {
       setError(err.message || 'Failed to load hackathon');
     }
@@ -60,14 +69,11 @@ export default function ManageHackathonScreen({ route, navigation }) {
   };
 
   const handleAssignJudge = async () => {
-    if (!judgeIdInput.trim() || Number.isNaN(Number(judgeIdInput))) {
-      Alert.alert('Invalid Judge ID', 'Enter a numeric judge ID.');
-      return;
-    }
+    if (!selectedJudgeId) return;
     setAssigningJudge(true);
     try {
-      await organizerApi.assignJudge(hackathonId, Number(judgeIdInput), user.userId);
-      setJudgeIdInput('');
+      await organizerApi.assignJudge(hackathonId, selectedJudgeId, user.userId);
+      setSelectedJudgeId(null);
       await load();
     } catch (err) {
       Alert.alert('Assignment failed', err.message || 'Please try again.');
@@ -97,14 +103,44 @@ export default function ManageHackathonScreen({ route, navigation }) {
     }
   };
 
+  const handleDeleteHackathon = () => {
+    Alert.alert(
+      'Delete this hackathon?',
+      `"${hackathon.title}" will be permanently removed, including all registrations and submissions tied to it. This cannot be undone.`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            setDeletingHackathon(true);
+            try {
+              await organizerApi.deleteHackathon(hackathonId);
+              navigation.goBack();
+            } catch (err) {
+              Alert.alert('Delete failed', err.message || 'Please try again.');
+              setDeletingHackathon(false);
+            }
+          },
+        },
+      ]
+    );
+  };
+
   if (loading) return <ScreenContainer scroll={false}><LoadingState /></ScreenContainer>;
   if (error || !hackathon) return <ScreenContainer scroll={false}><ErrorState message={error} onRetry={load} /></ScreenContainer>;
+
+  // Don't let the organizer pick a judge who's already assigned.
+  const assignedJudgeIds = new Set(judges.map((j) => j.judgeId));
+  const judgeOptions = allJudges
+    .filter((j) => !assignedJudgeIds.has(j.id))
+    .map((j) => ({ value: j.id, label: j.name }));
 
   return (
     <ScreenContainer>
       <View style={styles.headerRow}>
         <Text style={styles.title}>{hackathon.title}</Text>
-        <Badge label={hackathon.status} />
+        <Badge label={hackathon.status} displayLabel={getStatusLabel(hackathon.status)} />
       </View>
       <Text style={styles.dates}>{hackathon.startDate} → {hackathon.endDate}</Text>
 
@@ -151,18 +187,21 @@ export default function ManageHackathonScreen({ route, navigation }) {
           </View>
         ))}
 
-        <Text style={styles.hint}>
-          No judge search is available yet — enter the judge's numeric ID directly.
-        </Text>
-        <View style={styles.assignRow}>
-          <Input
-            placeholder="Judge ID"
-            keyboardType="number-pad"
-            value={judgeIdInput}
-            onChangeText={setJudgeIdInput}
-            style={{ flex: 1, marginBottom: 0 }}
+        <View style={styles.assignSection}>
+          <SelectField
+            label="Assign a judge"
+            value={selectedJudgeId}
+            options={judgeOptions}
+            onSelect={setSelectedJudgeId}
+            placeholder="Search judges by name"
+            searchable
           />
-          <Button title="Assign" loading={assigningJudge} onPress={handleAssignJudge} style={styles.assignBtn} />
+          <Button
+            title="Assign"
+            loading={assigningJudge}
+            disabled={!selectedJudgeId}
+            onPress={handleAssignJudge}
+          />
         </View>
       </Card>
 
@@ -180,6 +219,13 @@ export default function ManageHackathonScreen({ route, navigation }) {
         loading={generatingCerts}
         style={{ marginTop: spacing.sm }}
       />
+      <Button
+        title="Delete Hackathon"
+        variant="danger"
+        loading={deletingHackathon}
+        onPress={handleDeleteHackathon}
+        style={{ marginTop: spacing.xl }}
+      />
     </ScreenContainer>
   );
 }
@@ -190,7 +236,6 @@ const styles = StyleSheet.create({
   dates: { ...typography.caption, marginTop: spacing.xs },
   sectionTitle: { ...typography.h3, marginBottom: spacing.sm },
   body: { ...typography.body, color: colors.textSecondary },
-  hint: { ...typography.caption, marginTop: spacing.md, marginBottom: spacing.xs },
   teamRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -200,6 +245,5 @@ const styles = StyleSheet.create({
     borderTopColor: colors.border,
   },
   teamActions: { flexDirection: 'row' },
-  assignRow: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm },
-  assignBtn: { paddingHorizontal: spacing.md },
+  assignSection: { marginTop: spacing.md, paddingTop: spacing.md, borderTopWidth: 1, borderTopColor: colors.border },
 });
