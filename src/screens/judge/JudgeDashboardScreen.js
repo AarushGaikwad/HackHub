@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Text, View, StyleSheet, Pressable } from 'react-native';
-import { ChevronRight, Github } from 'lucide-react-native';
+import { ChevronRight, Github, Trophy } from 'lucide-react-native';
 import ScreenContainer from '../../components/ScreenContainer';
 import Card from '../../components/Card';
+import StatCard from '../../components/StatCard';
 import LoadingState from '../../components/LoadingState';
 import ErrorState from '../../components/ErrorState';
 import EmptyState from '../../components/EmptyState';
@@ -14,6 +15,7 @@ export default function JudgeDashboardScreen({ navigation }) {
   const { user } = useAuth();
   const [pending, setPending] = useState([]);
   const [stats, setStats] = useState(null);
+  const [hackathonCount, setHackathonCount] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -21,12 +23,14 @@ export default function JudgeDashboardScreen({ navigation }) {
     if (!user?.userId) return;
     setError(null);
     try {
-      const [pendingData, statsData] = await Promise.all([
+      const [pendingData, statsData, hackathonsData] = await Promise.all([
         judgeApi.getPendingSubmissions(user.userId),
         judgeApi.getJudgeStats(user.userId),
+        judgeApi.getJudgeHackathons(user.userId).catch(() => []),
       ]);
       setPending(pendingData || []);
       setStats(statsData);
+      setHackathonCount((hackathonsData || []).length);
     } catch (err) {
       setError(err.message || 'Failed to load evaluations');
     }
@@ -46,22 +50,30 @@ export default function JudgeDashboardScreen({ navigation }) {
 
       {stats && (
         <View style={styles.statsRow}>
-          <Card style={styles.statCard}>
-            <Text style={styles.statValue}>{stats.totalEvaluated ?? '—'}</Text>
-            <Text style={styles.statLabel}>Evaluated</Text>
-          </Card>
-          <Card style={styles.statCard}>
-            <Text style={styles.statValue}>{stats.averageScore ?? '—'}</Text>
-            <Text style={styles.statLabel}>Avg Score</Text>
-          </Card>
-          <Card style={styles.statCard}>
-            <Text style={styles.statValue}>{pending.length}</Text>
-            <Text style={styles.statLabel}>Pending</Text>
-          </Card>
+          <StatCard value={stats.totalEvaluated ?? '—'} label="Evaluated" />
+          <StatCard value={stats.averageScore ?? '—'} label="Avg score" />
+          <StatCard value={pending.length} label="Pending" />
         </View>
       )}
 
-      <Text style={styles.sectionTitle}>Pending Evaluations</Text>
+      {hackathonCount !== null && (
+        <Pressable onPress={() => navigation.navigate('Hackathons')}>
+          <Card style={styles.hackathonSummaryCard}>
+            <View style={styles.hackathonSummaryRow}>
+              <Trophy size={20} color={colors.primary} />
+              <View style={{ flex: 1, marginLeft: spacing.sm }}>
+                <Text style={styles.hackathonSummaryTitle}>
+                  {hackathonCount} hackathon{hackathonCount === 1 ? '' : 's'} assigned
+                </Text>
+                <Text style={styles.hackathonSummarySubtitle}>Tap to view all</Text>
+              </View>
+              <ChevronRight size={18} color={colors.textMuted} />
+            </View>
+          </Card>
+        </Pressable>
+      )}
+
+      <Text style={styles.sectionTitle}>Pending evaluations</Text>
 
       {pending.length === 0 ? (
         <EmptyState title="All caught up!" subtitle="No pending evaluations." />
@@ -91,9 +103,10 @@ export default function JudgeDashboardScreen({ navigation }) {
 const styles = StyleSheet.create({
   title: { ...typography.h1, marginBottom: spacing.lg },
   statsRow: { flexDirection: 'row', gap: spacing.sm, marginBottom: spacing.lg },
-  statCard: { flex: 1, alignItems: 'center', paddingVertical: spacing.md },
-  statValue: { ...typography.h2 },
-  statLabel: { ...typography.caption, marginTop: spacing.xs },
+  hackathonSummaryCard: { marginBottom: spacing.lg },
+  hackathonSummaryRow: { flexDirection: 'row', alignItems: 'center' },
+  hackathonSummaryTitle: { ...typography.h3, fontSize: 15 },
+  hackathonSummarySubtitle: { ...typography.caption, marginTop: 2 },
   sectionTitle: { ...typography.h3, marginBottom: spacing.sm },
   submissionCard: { flexDirection: 'row', alignItems: 'center', marginBottom: spacing.md },
   submissionTitle: { ...typography.h3 },

@@ -25,6 +25,13 @@ const ENDPOINTS = {
   SUBMISSIONS_BY_HACKATHON: (hackathonId) => `/submission/hackathon/${hackathonId}`,
   EVALUATIONS_BY_HACKATHON: (hackathonId) => `/evaluations/hackathon/${hackathonId}`,
   LEADERBOARD: (hackathonId) => `/evaluations/hackathon/${hackathonId}/leaderboard`,
+
+  ORGANIZATIONS_LIST: '/organization/organizations',
+
+  // Judges — confirmed against UserController/JudgeResponseDto.
+  // Requires a new GET /user/judges endpoint on the backend (see
+  // UserQueryController spec) if it doesn't exist yet.
+  JUDGES_LIST: '/user/judges',
 };
 
 // ── Hackathon Management 
@@ -73,3 +80,9 @@ export const getHackathonEvaluations = (hackathonId) =>
   unwrap(apiClient.get(ENDPOINTS.EVALUATIONS_BY_HACKATHON(hackathonId)));
 
 export const getLeaderboard = (hackathonId) => unwrap(apiClient.get(ENDPOINTS.LEADERBOARD(hackathonId)));
+
+// ── Organizations ──────────────────────────────────────────────────────
+export const getOrganizations = () => unwrap(apiClient.get(ENDPOINTS.ORGANIZATIONS_LIST));
+
+// ── Judges ──────────────────────────────────────────────────────────────
+export const getJudges = () => unwrap(apiClient.get(ENDPOINTS.JUDGES_LIST));

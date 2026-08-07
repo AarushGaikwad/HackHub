@@ -16,7 +16,7 @@ import { colors, radius, spacing, typography } from '../../constants/theme';
 const STATUS_FILTERS = [
   { key: 'ALL', label: 'All' },
   { key: 'ACTIVE', label: 'Active' },
-  { key: 'DRAFT', label: 'Draft' },
+  { key: 'DRAFT', label: 'Upcoming' },
   { key: 'ENDED', label: 'Ended' },
 ];
 
