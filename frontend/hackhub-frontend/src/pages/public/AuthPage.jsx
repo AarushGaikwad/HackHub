@@ -215,7 +215,7 @@ const AuthPage = () => {
       await api.post(endpoints[selectedRole], payloads[selectedRole]);
 
       setSuccess(
-        selectedRole === "ORGANIZER"
+        selectedRole === "ORGANIZER" || selectedRole === "JUDGE"
           ? "Account created! Wait for admin approval before logging in."
           : "Account created! You can now log in.",
       );
@@ -751,21 +751,20 @@ const AuthPage = () => {
                   icon={Lock}
                 />
 
-                {/* Organizer warning */}
-                {selectedRole === "ORGANIZER" && (
+                {/* Organizer and Judge warning */}
+                {(selectedRole === "ORGANIZER" || selectedRole === "JUDGE") && (
                   <div
-                    style={{
-                      backgroundColor: "var(--warning-bg)",
-                      color: "var(--warning-text)",
-                      borderRadius: "10px",
-                      padding: "12px 14px",
-                      fontSize: "12px",
-                      fontWeight: "500",
-                      lineHeight: "1.5",
-                    }}
+                      style={{
+                          backgroundColor: "var(--warning-bg)",
+                          color: "var(--warning-text)",
+                          borderRadius: "10px",
+                          padding: "12px 14px",
+                          fontSize: "12px",
+                          fontWeight: "500",
+                          lineHeight: "1.5",
+                      }}
                   >
-                    ⚠️ Organizer accounts require admin approval before you can
-                    log in.
+                      ⚠️ {selectedRole.charAt(0) + selectedRole.slice(1).toLowerCase()} accounts require admin approval before you can log in.
                   </div>
                 )}
 
