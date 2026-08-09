@@ -16,8 +16,11 @@ export const PALETTES = {
     primaryMuted: 'rgba(91,140,255,0.12)',
 
     success: '#3ED598',
+    successMuted: 'rgba(62,213,152,0.12)',
     warning: '#F5B94D',
+    warningMuted: 'rgba(245,185,77,0.12)',
     danger: '#F0616B',
+    dangerMuted: 'rgba(240,97,107,0.12)',
   },
 
   light: {
@@ -37,8 +40,11 @@ export const PALETTES = {
     primaryMuted: 'rgba(37,99,235,0.12)',
 
     success: '#16A34A',
+    successMuted: 'rgba(22,163,74,0.12)',
     warning: '#D97706',
+    warningMuted: 'rgba(217,119,6,0.12)',
     danger: '#DC2626',
+    dangerMuted: 'rgba(220,38,38,0.12)',
   },
 };
 
@@ -68,6 +74,8 @@ export const buildTypography = (colors) => ({
   caption: { fontSize: 12, color: colors.textMuted },
 });
 
-
+// Static fallbacks for screens not yet migrated to useTheme(). Always
+// dark-mode — will NOT respond to the theme toggle. See useTheme() in
+// ThemeContext.js for the dynamic, toggle-aware version.
 export const colors = PALETTES.dark;
 export const typography = buildTypography(colors);
