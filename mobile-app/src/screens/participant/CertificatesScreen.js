@@ -8,7 +8,7 @@ import LoadingState from '../../components/LoadingState';
 import ErrorState from '../../components/ErrorState';
 import EmptyState from '../../components/EmptyState';
 import * as participantApi from '../../api/participantApi';
-import { savePdfAndShare } from '../../utils/downloadFile';
+import { downloadPdf, sharePdf } from '../../utils/downloadFile';
 import { useTheme } from '../../context/ThemeContext';
 import { radius, spacing } from '../../constants/theme';
 
@@ -55,15 +55,54 @@ export default function CertificatesScreen() {
   };
 
   const handleDownload = async (cert) => {
-    setDownloadingId(cert.id);
+  setDownloadingId(cert.id);
+
     try {
-      const response = await participantApi.downloadCertificate(cert.id);
+      const response =
+        await participantApi.downloadCertificate(cert.id);
+
       const filename = `HackHub_Certificate_${
         cert.hackathonTitle || cert.id
       }.pdf`.replace(/\s+/g, '_');
-      await savePdfAndShare(response.data, filename);
+
+      await downloadPdf(response.data, filename);
+
+      Alert.alert(
+        'Download successful',
+        'Your certificate has been saved successfully.'
+      );
+
     } catch (err) {
-      Alert.alert('Download failed', err.message || 'Please try again.');
+      Alert.alert(
+        'Download failed',
+        err.message || 'Please try again.'
+      );
+    } finally {
+      setDownloadingId(null);
+    }
+  };
+
+  const handleShare = async (cert) => {
+    setDownloadingId(cert.id);
+
+    try {
+      const response =
+        await participantApi.downloadCertificate(cert.id);
+
+      const filename = `HackHub_Certificate_${
+        cert.hackathonTitle || cert.id
+      }.pdf`.replace(/\s+/g, '_');
+
+      await sharePdf(
+        response.data,
+        filename
+      );
+
+    } catch (err) {
+      Alert.alert(
+        'Share failed',
+        err.message || 'Please try again.'
+      );
     } finally {
       setDownloadingId(null);
     }
@@ -181,6 +220,7 @@ export default function CertificatesScreen() {
                     {cert.hackathonTitle}
                   </Text>
                   <View style={styles.detailActions}>
+
                     <Button
                       title="Share"
                       variant="secondary"
@@ -188,26 +228,32 @@ export default function CertificatesScreen() {
                         <Share2
                           size={16}
                           color={colors.primary}
-                          style={{ marginRight: spacing.xs }}
+                          style={{
+                            marginRight: spacing.xs,
+                          }}
                         />
                       }
                       loading={isDownloading}
-                      onPress={() => handleDownload(cert)}
+                      onPress={() => handleShare(cert)}
                       style={styles.actionButton}
                     />
+
                     <Button
                       title="Download"
                       icon={
                         <Download
                           size={16}
                           color="#fff"
-                          style={{ marginRight: spacing.xs }}
+                          style={{
+                            marginRight: spacing.xs,
+                          }}
                         />
                       }
                       loading={isDownloading}
                       onPress={() => handleDownload(cert)}
                       style={styles.actionButton}
                     />
+
                   </View>
                 </Card>
               )}
