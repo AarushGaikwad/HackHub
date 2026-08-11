@@ -1,5 +1,0 @@
-export const ROLES = {
-  PARTICIPANT: 'PARTICIPANT',
-  ORGANIZER: 'ORGANIZER',
-  JUDGE: 'JUDGE',
-};
