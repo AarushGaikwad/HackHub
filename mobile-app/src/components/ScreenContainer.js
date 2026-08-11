@@ -1,12 +1,7 @@
 import React from 'react';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { spacing } from '../constants/theme';
 import { useTheme } from '../context/ThemeContext';
@@ -18,31 +13,24 @@ export default function ScreenContainer({
 }) {
   const { colors } = useTheme();
 
-  const Wrapper = scroll ? ScrollView : View;
-
-  const wrapperProps = scroll
-    ? {
-        contentContainerStyle: [styles.scrollContent, style],
-        keyboardShouldPersistTaps: 'handled',
-      }
-    : {
-        style: [styles.content, style],
-      };
-
   return (
     <SafeAreaView
       style={[styles.safeArea, { backgroundColor: colors.bg }]}
       edges={['top', 'bottom']}
     >
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
-      >
-        <Wrapper {...wrapperProps}>
+      {scroll ? (
+        <KeyboardAwareScrollView
+          contentContainerStyle={[styles.scrollContent, style]}
+          keyboardShouldPersistTaps="handled"
+          enableOnAndroid
+          extraScrollHeight={20}
+          keyboardOpeningTime={0}
+        >
           {children}
-        </Wrapper>
-      </KeyboardAvoidingView>
+        </KeyboardAwareScrollView>
+      ) : (
+        <View style={[styles.content, style]}>{children}</View>
+      )}
     </SafeAreaView>
   );
 }

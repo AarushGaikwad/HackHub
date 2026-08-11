@@ -9,15 +9,12 @@ import EmptyState from '../../components/EmptyState';
 import * as commonApi from '../../api/commonApi';
 import { colors, radius, spacing, typography } from '../../constants/theme';
 
-// Matches the HackathonStatus enum values used by Badge.js and returned
-// by GET /hackathon/filter?status=. PARTICIPANT is allowed to call that
-// endpoint (confirmed in HackathonController), unlike /hackathon/search
-// which is ORGANIZER-only — see the note below on searchHackathons.
+
 const STATUS_FILTERS = [
   { key: 'ALL', label: 'All' },
   { key: 'ACTIVE', label: 'Active' },
-  { key: 'DRAFT', label: 'Upcoming' },
-  { key: 'ENDED', label: 'Ended' },
+  { key: 'UPCOMING', label: 'Upcoming' },
+  { key: 'COMPLETED', label: 'Completed' },
 ];
 
 export default function BrowseHackathonsScreen({ navigation }) {
