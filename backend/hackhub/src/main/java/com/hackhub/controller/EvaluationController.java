@@ -23,7 +23,15 @@ public class EvaluationController {
         this.evaluationService = evaluationService;
     }
 
-    // ─── Judge Assignment APIs ────────────────────────────────────────────────
+    // Judge Assignment APIs
+
+    // Get all users with JUDGE role, so organizers can pick one to assign
+    @PreAuthorize("hasRole('ORGANIZER')")
+    @GetMapping("/hackathon/judges/available")
+    public ResponseEntity<ResponseStatus<List<UserResponseDto>>> getAvailableJudges() {
+        List<UserResponseDto> response = evaluationService.getAvailableJudges();
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseStatus.success(response));
+    }
 
     // Assign judge to a hackathon
     @PreAuthorize("hasRole('ORGANIZER')")
@@ -61,7 +69,7 @@ public class EvaluationController {
         return ResponseEntity.status(HttpStatus.OK).body(ResponseStatus.success(response));
     }
 
-    // ─── Evaluation APIs ──────────────────────────────────────────────────────
+    // Evaluation APIs
 
     // Submit evaluation
     @PreAuthorize("hasRole('JUDGE')")

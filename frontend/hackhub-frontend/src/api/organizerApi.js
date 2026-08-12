@@ -27,3 +27,5 @@ export const removeJudge = (hackathonId, judgeId, organizerId) => api.delete(`/h
 export const getAllOrganizations = () => api.get('/organization/organizations');
 
 export const getAllUsers = () => api.get('/admin/users');
+
+export const getAvailableJudges = () => api.get('/hackathon/judges/available');

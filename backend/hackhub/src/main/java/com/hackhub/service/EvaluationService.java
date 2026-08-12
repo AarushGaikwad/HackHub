@@ -327,6 +327,22 @@ public class EvaluationService {
                 .build();
     }
 
+    // Get available judge's
+    public List<UserResponseDto> getAvailableJudges() {
+        return userRepository.findByRole("JUDGE")
+                .stream()
+                .map(user -> UserResponseDto.builder()
+                        .id(user.getId())
+                        .name(user.getName())
+                        .email(user.getEmail())
+                        .role(user.getRole())
+                        .designation(user.getDesignation())
+                        .status(user.getStatus())
+                        .createdAt(user.getCreatedAt())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
     // Get leaderboard
     public List<LeaderboardResponseDto> getLeaderboard(Integer hackathonId) {
         hackathonRepository.findById(hackathonId)
