@@ -56,7 +56,7 @@ public class AdminController {
     }
 
     // Get user by role
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ORGANIZER')")
     @GetMapping("/users/role/{role}")
     public ResponseEntity<ResponseStatus<List<UserResponseDto>>> getUsersByRole(
             @PathVariable String role) {
