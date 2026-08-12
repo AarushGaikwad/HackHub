@@ -18,12 +18,12 @@ public class CorsConfig {
 
         // Frontend URL
         configuration.setAllowedOrigins(List.of(
-                "http://localhost:5173"
+                "http://localhost:5173", "https://hackhub-psi.vercel.app"
         ));
 
         // Allowed HTTP methods
         configuration.setAllowedMethods(List.of(
-                "GET", "POST", "PUT", "PATCH", "DELETE"
+                "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"
         ));
 
         // Allowed headers
