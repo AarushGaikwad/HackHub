@@ -8,7 +8,7 @@ import { useAuth } from '../../context/AuthContext';
 import {
     createHackathon, getMyHackathons, updateHackathon, deleteHackathon,
     getRegisteredTeams, getLeaderboard, generateCertificates,
-    getAssignedJudges, assignJudge, removeJudge, getAllUsers, getAllOrganizations
+    getAssignedJudges, assignJudge, removeJudge, getAvailableJudges, getAllOrganizations
 } from '../../api/organizerApi';
 
 const TABS = ['Overview', 'My Hackathons', 'Manage', 'Judges'];
@@ -300,9 +300,9 @@ const JudgesTab = ({ hackathons, user }) => {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        getAllUsers().then(r => {
-            setAllJudges((r.data.data || []).filter(u => u.role === 'JUDGE'));
-        }).catch(() => {});
+    getAvailableJudges().then(r => {
+        setAllJudges(r.data.data || []);
+    }).catch(() => setError('Failed to load judges list.'));
     }, []);
 
     const loadJudges = async (id) => {
