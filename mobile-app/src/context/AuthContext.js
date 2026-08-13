@@ -35,6 +35,9 @@ export function AuthProvider({ children }) {
   const login = useCallback(async (email, password) => {
     // LoginResponseDto: { token, userId, name, email, role, status }
     const data = await authApi.login(email, password);
+
+    console.log('LOGIN RESPONSE:', data);
+    console.log('LOGIN TOKEN EXISTS:', !!data?.token);
  
     const resolvedUser = {
       userId: data.userId,
