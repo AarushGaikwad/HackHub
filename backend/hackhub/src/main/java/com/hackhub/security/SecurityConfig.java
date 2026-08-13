@@ -49,7 +49,7 @@ public class SecurityConfig {
                         // Public endpoints
                         .requestMatchers(
                                 "/user/register/**",
-                                "/login"
+                                "/login", "/health"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/hackathon/hackathons"
