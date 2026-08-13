@@ -7,13 +7,17 @@ import Button from '../../components/Button';
 import LoadingState from '../../components/LoadingState';
 import ErrorState from '../../components/ErrorState';
 import * as judgeApi from '../../api/judgeApi';
+import { useAuth } from '../../context/AuthContext';
 import { colors, spacing, typography } from '../../constants/theme';
 
 export default function EvaluateSubmissionScreen({ route, navigation }) {
   const { submissionId } = route.params;
+  const { user } = useAuth();
   const [submission, setSubmission] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [existingEvalId, setExistingEvalId] = useState(null);
 
   const [score, setScore] = useState('');
   const [feedback, setFeedback] = useState('');
@@ -24,12 +28,22 @@ export default function EvaluateSubmissionScreen({ route, navigation }) {
   const load = useCallback(async () => {
     setError(null);
     try {
-      const data = await judgeApi.getSubmissionById(submissionId);
-      setSubmission(data);
+      const [submissionData, evaluations] = await Promise.all([
+        judgeApi.getSubmissionById(submissionId),
+        judgeApi.getSubmissionEvaluations(submissionId).catch(() => []),
+      ]);
+      setSubmission(submissionData);
+
+      const mine = (evaluations || []).find((e) => e.judgeId === user?.userId);
+      if (mine) {
+        setExistingEvalId(mine.id);
+        setScore(String(mine.score ?? ''));
+        setFeedback(mine.feedback ?? '');
+      }
     } catch (err) {
       setError(err.message || 'Failed to load submission');
     }
-  }, [submissionId]);
+  }, [submissionId, user?.userId]);
 
   useEffect(() => {
     setLoading(true);
@@ -52,14 +66,22 @@ export default function EvaluateSubmissionScreen({ route, navigation }) {
     if (!validate()) return;
     setSubmitting(true);
     try {
-      await judgeApi.submitEvaluation({
-        submissionId,
-        score: Number(score),
-        feedback: feedback.trim(),
-      });
+      if (existingEvalId) {
+        await judgeApi.updateEvaluation(existingEvalId, {
+          submissionId,
+          score: Number(score),
+          feedback: feedback.trim(),
+        });
+      } else {
+        await judgeApi.submitEvaluation({
+          submissionId,
+          score: Number(score),
+          feedback: feedback.trim(),
+        });
+      }
       navigation.goBack();
     } catch (err) {
-      setApiError(err.message || 'Failed to submit evaluation');
+      setApiError(err.message || `Failed to ${existingEvalId ? 'update' : 'submit'} evaluation`);
     } finally {
       setSubmitting(false);
     }
@@ -78,6 +100,9 @@ export default function EvaluateSubmissionScreen({ route, navigation }) {
       </Card>
 
       <Card style={{ marginTop: spacing.lg }}>
+        {existingEvalId ? (
+          <Text style={styles.editingHint}>You've already evaluated this — edits will update your score.</Text>
+        ) : null}
         <Input label="Score (0–100)" keyboardType="number-pad" value={score} onChangeText={setScore} error={errors.score} />
         <Input
           label="Feedback"
@@ -92,7 +117,12 @@ export default function EvaluateSubmissionScreen({ route, navigation }) {
 
         {apiError ? <Text style={styles.apiError}>{apiError}</Text> : null}
 
-        <Button title="Submit Evaluation" onPress={handleSubmit} loading={submitting} style={{ marginTop: spacing.sm }} />
+        <Button
+          title={existingEvalId ? 'Update Evaluation' : 'Submit Evaluation'}
+          onPress={handleSubmit}
+          loading={submitting}
+          style={{ marginTop: spacing.sm }}
+        />
       </Card>
     </ScreenContainer>
   );
@@ -103,5 +133,6 @@ const styles = StyleSheet.create({
   subtitle: { ...typography.bodySecondary, marginTop: spacing.xs },
   body: { ...typography.body, color: colors.textSecondary },
   hint: { ...typography.caption, marginBottom: spacing.sm },
+  editingHint: { ...typography.caption, color: colors.primary, marginBottom: spacing.md },
   apiError: { color: colors.danger, fontSize: 13, marginBottom: spacing.sm },
 });

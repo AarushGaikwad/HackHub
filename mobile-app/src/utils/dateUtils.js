@@ -1,6 +1,3 @@
-// Small relative-time helper for hackathon list/detail screens.
-// Kept dependency-free (no date-fns/moment) since this is the only place
-// that needs it right now.
 export function getHackathonTiming(startDate, endDate) {
   if (!startDate && !endDate) return null;
 
@@ -31,9 +28,24 @@ export function getHackathonTiming(startDate, endDate) {
   return null;
 }
 
-// Generic "time ago" for any past timestamp — e.g. when a judge was
-// assigned to a hackathon. Distinct from getHackathonTiming, which is
-// specifically about a hackathon's own start/end window.
+const URGENCY_THRESHOLD_DAYS = 3;
+
+export function getRegistrationUrgency(registrationDeadline) {
+  if (!registrationDeadline) return null;
+
+  const now = new Date();
+  const deadline = new Date(registrationDeadline);
+  if (now >= deadline) return null;
+
+  const dayMs = 24 * 60 * 60 * 1000;
+  const days = Math.ceil((deadline - now) / dayMs);
+  if (days > URGENCY_THRESHOLD_DAYS) return null;
+
+  if (days <= 0) return 'Registration closes today';
+  if (days === 1) return 'Registration closes tomorrow';
+  return `Registration closes in ${days} days`;
+}
+
 export function getRelativeTimeAgo(dateStr) {
   if (!dateStr) return null;
   const diffMs = new Date() - new Date(dateStr);

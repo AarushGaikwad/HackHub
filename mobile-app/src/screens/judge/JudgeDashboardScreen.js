@@ -14,6 +14,7 @@ import { colors, spacing, typography } from '../../constants/theme';
 export default function JudgeDashboardScreen({ navigation }) {
   const { user } = useAuth();
   const [pending, setPending] = useState([]);
+  const [evaluated, setEvaluated] = useState([]);
   const [stats, setStats] = useState(null);
   const [hackathonCount, setHackathonCount] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -23,12 +24,14 @@ export default function JudgeDashboardScreen({ navigation }) {
     if (!user?.userId) return;
     setError(null);
     try {
-      const [pendingData, statsData, hackathonsData] = await Promise.all([
+      const [pendingData, evaluatedData, statsData, hackathonsData] = await Promise.all([
         judgeApi.getPendingSubmissions(user.userId),
+        judgeApi.getJudgeEvaluations(user.userId).catch(() => []),
         judgeApi.getJudgeStats(user.userId),
         judgeApi.getJudgeHackathons(user.userId).catch(() => []),
       ]);
       setPending(pendingData || []);
+      setEvaluated(evaluatedData || []);
       setStats(statsData);
       setHackathonCount((hackathonsData || []).length);
     } catch (err) {
@@ -96,6 +99,27 @@ export default function JudgeDashboardScreen({ navigation }) {
           </Pressable>
         ))
       )}
+
+      {evaluated.length > 0 && (
+        <>
+          <Text style={[styles.sectionTitle, { marginTop: spacing.lg }]}>Your evaluations</Text>
+          {evaluated.map((ev) => (
+            <Pressable
+              key={ev.id}
+              onPress={() => navigation.navigate('EvaluateSubmission', { submissionId: ev.submissionId })}
+            >
+              <Card style={styles.submissionCard}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.submissionTitle}>{ev.submissionTitle}</Text>
+                  <Text style={styles.submissionMeta}>{ev.teamName}</Text>
+                </View>
+                <Text style={styles.scoreText}>{ev.score}</Text>
+                <ChevronRight size={18} color={colors.textMuted} />
+              </Card>
+            </Pressable>
+          ))}
+        </>
+      )}
     </ScreenContainer>
   );
 }
@@ -113,4 +137,5 @@ const styles = StyleSheet.create({
   submissionMeta: { ...typography.bodySecondary, marginTop: 2 },
   linkRow: { flexDirection: 'row', alignItems: 'center', marginTop: spacing.xs, gap: 4 },
   linkText: { ...typography.caption, flex: 1 },
+  scoreText: { ...typography.h3, fontSize: 15, color: colors.primary, marginRight: spacing.sm },
 });

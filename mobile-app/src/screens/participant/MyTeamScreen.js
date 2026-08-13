@@ -231,7 +231,21 @@ export default function MyTeamScreen({ navigation }) {
           />
         </>
       ) : (
-        teams.map((team) => (
+        <>
+          <View style={styles.newTeamRow}>
+            <Button
+              title="Create Team"
+              onPress={() => navigation.navigate('CreateTeam')}
+              style={{ flex: 1 }}
+            />
+            <Button
+              title="Join Team"
+              variant="secondary"
+              onPress={() => navigation.navigate('JoinTeam')}
+              style={{ flex: 1 }}
+            />
+          </View>
+          {teams.map((team) => (
           <Card key={team.id} style={{ marginBottom: spacing.md }}>
             <View style={styles.headerRow}>
               <View style={{ flex: 1 }}>
@@ -395,13 +409,15 @@ export default function MyTeamScreen({ navigation }) {
               />
             )}
           </Card>
-        ))
+          ))}
+        </>
       )}
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
+  newTeamRow: { flexDirection: 'row', gap: spacing.sm, marginBottom: spacing.md },
   title: { ...typography.h1, marginBottom: spacing.lg },
   headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
   teamName: { ...typography.h3 },
