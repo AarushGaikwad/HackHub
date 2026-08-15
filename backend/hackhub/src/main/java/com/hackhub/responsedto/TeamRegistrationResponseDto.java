@@ -23,4 +23,6 @@ public class TeamRegistrationResponseDto {
     private String status;
     private String registeredBy;
     private LocalDateTime registeredAt;
+    private LocalDateTime hackathonStartDate;
+    private LocalDateTime hackathonEndDate;
 }
