@@ -1,13 +1,5 @@
 import { createContext, useContext, useState } from 'react';
-import {
-    saveToken,
-    saveUser,
-    getToken,
-    getUser,
-    removeToken,
-    removeUser,
-    isAuthenticated
-} from '../utils/tokenUtils';
+import {saveToken, saveUser, getToken, getUser, removeToken, removeUser, isAuthenticated} from '../utils/tokenUtils';
 
 const AuthContext = createContext(null);
 

@@ -220,6 +220,8 @@ public class TeamRegistrationService {
                 .registeredBy(teamRegistration.getRegisteredBy() != null
                         ? teamRegistration.getRegisteredBy().getName() : null)
                 .registeredAt(teamRegistration.getRegisteredAt())
+                .hackathonStartDate(teamRegistration.getHackathon().getStartDate())
+                .hackathonEndDate(teamRegistration.getHackathon().getEndDate())
                 .build();
     }
 }

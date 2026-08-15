@@ -132,6 +132,8 @@ const SubmissionPage = () => {
     const { teamRegistrationId } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
+    console.log("SubmissionPage user:", user);
+    console.log("SubmissionPage user.id:", user?.id);
     const [submissions, setSubmissions] = useState([]);
     const [registration, setRegistration] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -165,7 +167,7 @@ const SubmissionPage = () => {
         try {
             const [sRes, rRes] = await Promise.all([
                 getTeamSubmissions(teamRegistrationId),
-                api.get(`/hackathon/team/${teamRegistrationId}/registrations`).catch(() => ({ data: { data: [] } })),
+                api.get(`/hackathon/user/${user.userId}/hackathons`)
             ]);
             setSubmissions(sRes.data.data || []);
             const regs = rRes.data.data || [];
@@ -173,7 +175,7 @@ const SubmissionPage = () => {
             setRegistration(reg || null);
         } catch { setError('Failed to load submissions.'); }
         finally { setLoading(false); }
-    }, [teamRegistrationId]);
+    }, [teamRegistrationId, user?.userId]);
 
     useEffect(() => { load(); }, [load]);
 
