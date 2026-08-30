@@ -2,6 +2,9 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ProtectedRoute from './ProtectedRoute';
 
+// Ai chat bot
+import AiCompanionWidget from '../components/ai/AiCompanionWidget';
+
 // Public pages
 import LandingPage from '../pages/public/LandingPage';
 import AuthPage from '../pages/public/AuthPage';
@@ -117,6 +120,10 @@ const AppRouter = () => {
                 <Route path="*" element={<Navigate to="/" replace />} />
 
             </Routes>
+
+            
+                {/* Global AI Companion */}
+                {isAuthenticated && <AiCompanionWidget />}
         </BrowserRouter>
     );
 };

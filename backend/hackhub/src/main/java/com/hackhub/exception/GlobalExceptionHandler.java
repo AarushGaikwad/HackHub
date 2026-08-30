@@ -1,5 +1,6 @@
 package com.hackhub.exception;
 
+import com.hackhub.chatbot.AiRateLimitException;
 import com.hackhub.responsestatus.ResponseStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,12 @@ public class GlobalExceptionHandler {
         String message = ex.getBindingResult().getFieldErrors().stream().map(FieldError::getDefaultMessage).collect(Collectors.joining(", "));
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseStatus.error(message));
+    }
+
+    @ExceptionHandler(AiRateLimitException.class)
+    public ResponseEntity<ResponseStatus<Object>> handleAiRateLimitException(AiRateLimitException ex) {
+
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(ResponseStatus.error(ex.getMessage()));
     }
 
     // Handles all custom business logic exceptions (RuntimeException)
